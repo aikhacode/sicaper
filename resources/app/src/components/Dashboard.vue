@@ -4,11 +4,11 @@
 			<div class="card mb-0">
 				<div class="flex justify-content-between mb-3">
 					<div>
-						<span class="block text-500 font-medium mb-3">Pegawai</span>
-						<div class="text-900 font-medium text-xl">{{store.pegawai.count}}</div>
+						<span class="block text-500 font-medium mb-3">Barang</span>
+						<div class="text-900 font-medium text-xl">{{store.barang.count}}</div>
 					</div>
 					<div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width:2.5rem;height:2.5rem">
-						<i class="pi pi-users text-blue-500 text-xl"></i>
+						<i class="pi pi-server text-blue-500 text-xl"></i>
 					</div>
 				</div>
 				<span class="text-green-500 font-medium"></span>
@@ -19,11 +19,11 @@
 			<div class="card mb-0">
 				<div class="flex justify-content-between mb-3">
 					<div>
-						<span class="block text-500 font-medium mb-3">Dokumen Internal</span>
-						<div class="text-900 font-medium text-xl">{{store.document.internal.count}}</div>
+						<span class="block text-500 font-medium mb-3">Stok Masuk</span>
+						<div class="text-900 font-medium text-xl">{{store.stok.masuk.count}}</div>
 					</div>
 					<div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width:2.5rem;height:2.5rem">
-						<i class="pi pi-folder text-orange-500 text-xl"></i>
+						<i class="pi pi-download text-orange-500 text-xl"></i>
 					</div>
 				</div>
 				<span class="text-green-500 font-medium"></span>
@@ -34,18 +34,18 @@
 			<div class="card mb-0">
 				<div class="flex justify-content-between mb-3">
 					<div>
-						<span class="block text-500 font-medium mb-3">Dokumen Eksternal</span>
-						<div class="text-900 font-medium text-xl">{{store.document.external.count}}</div>
+						<span class="block text-500 font-medium mb-3">Stok Keluar</span>
+						<div class="text-900 font-medium text-xl">{{store.stok.keluar.count}}</div>
 					</div>
 					<div class="flex align-items-center justify-content-center bg-cyan-100 border-round" style="width:2.5rem;height:2.5rem">
-						<i class="pi pi-folder-open text-cyan-500 text-xl"></i>
+						<i class="pi pi-upload text-cyan-500 text-xl"></i>
 					</div>
 				</div>
 				<span class="text-green-500 font-medium"> </span>
 				<span class="text-500"> </span>
 			</div>
 		</div>
-		<div class="col-12 lg:col-6 xl:col-3">
+		<!-- <div class="col-12 lg:col-6 xl:col-3">
 			<div class="card mb-0">
 				<div class="flex justify-content-between mb-3">
 					<div>
@@ -59,9 +59,9 @@
 				<span class="text-green-500 font-medium"> </span>
 				<span class="text-500"></span>
 			</div>
-		</div>
+		</div> -->
 
-		<div class="col-12 lg:col-6 xl:col-3">
+		<!-- <div class="col-12 lg:col-6 xl:col-3">
 			<div class="card mb-0">
 				<div class="flex justify-content-between mb-3">
 					<div>
@@ -75,7 +75,7 @@
 				<span class="text-green-500 font-medium"> </span>
 				<span class="text-500"></span>
 			</div>
-		</div>
+		</div> -->
 
 	<!-- <div class="col-12 xl:col-6">
 		<div class="card">
@@ -323,7 +323,7 @@ export default {
 	async created() {
 		this.productService = new ProductService();
 
-		await this.store.getPegawai()
+		// await this.store.getPegawai()
 
 	},
 	methods: {

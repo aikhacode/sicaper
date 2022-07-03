@@ -11,7 +11,7 @@
 		name: "AppFooter",
 		methods: {
 			footerImage() {
-				return this.$appState.darkTheme ? 'images/logo-sipardi.png' : 'images/logo-sipardi.png';
+				return this.$appState.darkTheme ? 'images/logo-sicaper.png' : 'images/logo-sicaper.png';
 			}
 		},
 		computed: {

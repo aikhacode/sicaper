@@ -17,15 +17,15 @@ export const useStore = defineStore("main", {
                     role: "Admin",
                 },
             },
-            pegawai: {
+            barang: {
                 count: 0,
-                data:[],
+                data: [],
             },
-            document: {
-                internal: {
+            stok: {
+                masuk: {
                     count: 0,
                 },
-                external: {
+                keluar: {
                     count: 0,
                 },
             },
@@ -43,34 +43,32 @@ export const useStore = defineStore("main", {
         isLoggedIn() {
             return this.authenticated;
         },
-        async getPegawai(){
+        async getPegawai() {
             let api = this.parseApi();
             let headersList = {
-                "Accept": "application/json",
+                Accept: "application/json",
                 // "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-                "Authorization": `Bearer ${this.token}` 
-               }
+                Authorization: `Bearer ${this.token}`,
+            };
             let reqOptions = {
-                url: this.parseApi()+'/pegawai',
+                url: this.parseApi() + "/pegawai",
                 method: "GET",
                 headers: headersList,
-              }
-              
+            };
+
             try {
-                let res = await axios.request(reqOptions)
+                let res = await axios.request(reqOptions);
                 // console.log(res.data);
-                this.pegawai.count = res.data.length
-                this.pegawai.data = res.data
+                this.pegawai.count = res.data.length;
+                this.pegawai.data = res.data;
                 return {
                     data: res.data,
-                    count: res.data.length
-                }
+                    count: res.data.length,
+                };
             } catch (err) {
                 console.log(err.response.status);
-                return false
+                return false;
             }
-
-            
         },
         async doLogin(obj) {
             let api = this.parseApi();
@@ -93,20 +91,19 @@ export const useStore = defineStore("main", {
             // let res = await axios.get('')
             let api = this.parseApi();
             try {
-             
                 let headersList = {
-                  "Accept": "application/json",
-                  // "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-                  "Authorization": `Bearer ${this.token}` 
-                 }
-                 
-                 let reqOptions = {
-                   url: this.parseApi()+'/logout',
-                   method: "POST",
-                   headers: headersList,
-                 }
-                 
-                 let res = await axios.request(reqOptions)
+                    Accept: "application/json",
+                    // "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+                    Authorization: `Bearer ${this.token}`,
+                };
+
+                let reqOptions = {
+                    url: this.parseApi() + "/logout",
+                    method: "POST",
+                    headers: headersList,
+                };
+
+                let res = await axios.request(reqOptions);
 
                 this.token = "";
                 this.authenticated = false;

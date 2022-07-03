@@ -59,13 +59,13 @@ export default {
 
                         ]
                 },
-                {   label: 'ARSIP',
+                {   label: 'Catatan Persediaan',
                     items: [
-                        {label: 'Data Pegawai', icon: 'pi pi-fw pi-users', to: '/data-pegawai'},
-                        {label: "Dokumen Internal", icon: "pi pi-fw pi-folder", to: "/dokument-internal"},
-                        {label: "Dokumen Eksternal", icon: "pi pi-fw pi-folder-open", to: "/dokument-eksternal"},
-                        {label: 'Surat Masuk', icon: 'pi pi-fw pi-envelope', to: '/surat-masuk'},
-                        {label: 'Surat Keluar', icon: 'pi pi-fw pi-briefcase', to: '/surat-keluar'},
+                        {label: 'Kartu Stok', icon: 'pi pi-fw pi-server', to: '/data-barang'},
+                        {label: "Stok Masuk", icon: "pi pi-fw pi-download", to: "/stok-masuk"},
+                        {label: "Stok Keluar", icon: "pi pi-fw pi-upload", to: "/stok-keluar"},
+                        {label: 'Stok Opname', icon: 'pi pi-fw pi-box', to: '/stok-opname'},
+                        
                         ]
                 },
                 {   label: 'AKUN',

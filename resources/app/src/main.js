@@ -202,7 +202,7 @@ app.component("BlockViewer", BlockViewer);
 
 app.mount("#app");
 
-if (location.hostname != 'simpardi.test') {
+if (location.hostname != 'sicaper.test') {
     console.log = () =>{
 
     }
