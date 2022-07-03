@@ -1,0 +1,1 @@
+class r{getProductsSmall(){return fetch("data/products-small.json").then(t=>t.json()).then(t=>t.data)}getProducts(){return fetch("data/products.json").then(t=>t.json()).then(t=>t.data)}getProductsWithOrdersSmall(){return fetch("data/products-orders-small.json").then(t=>t.json()).then(t=>t.data)}}export{r as P};

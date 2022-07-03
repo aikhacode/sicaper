@@ -1,0 +1,1 @@
+import{_ as e,o,c as r}from"./index.be809eec.js";const c={},a={class:"col-12 md:col-12 overflow-hidden heroku"};function _(t,n){return o(),r("div",a)}var d=e(c,[["render",_],["__scopeId","data-v-3538ac04"]]);export{d as default};
