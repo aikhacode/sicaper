@@ -2,7 +2,7 @@
     <div class="layout-topbar">
         <router-link to="/" class="layout-topbar-logo">
             <img alt="Logo" :src="topbarImage()" />
-            <span>SIPArDi</span>
+            <span>SICAPER</span>
         </router-link>
 
         <button
