@@ -5,7 +5,7 @@
 <style scoped>
 .heroku {
     height: 100vh;
-    background-image: url("/images/blocks/hero/hero3.jpg");
+    background-image: url("/images/dashboard2.jpg");
     background-size: cover;
     background-position: center;
 }
