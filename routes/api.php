@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-// use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\BarangController;
 use Illuminate\Http\Response;
 
 /*
@@ -30,6 +30,8 @@ Route::post('/login', [AuthController::class, 'login']);
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
+    Route::get('/barang',[BarangController::class,'index']);
+    Route::get('/barang/category',[BarangController::class,'get_all_category']);
 
 
     // Route::post('/pegawai/create',[PegawaiController::class,'store']);

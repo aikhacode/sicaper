@@ -2,6 +2,8 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import App from "./App.vue";
 import { useStore } from "./store.js";
 
+// import DataBarang from "./pages/DataBarang.vue";
+
 const routes = [
     {
         path: "/",
