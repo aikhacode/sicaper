@@ -13,9 +13,10 @@
 
 <script setup>
 import { StreamBarcodeReader } from "vue-barcode-reader";
+import router from "@/router.js"
 
 const onDecode = (e) =>{
-   
+	router.go(-1)   
 }
 
 
