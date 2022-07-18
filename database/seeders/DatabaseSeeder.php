@@ -11,7 +11,9 @@ class DatabaseSeeder extends Seeder {
 	 * @return void
 	 */
 	public function run() {
-		// \App\Models\User::factory(10)->create();
-		   \App\Models\Pegawai::factory(10)->create();
+		\App\Models\User::factory(1)->create();
+		// \App\Models\Pegawai::factory(1)->create();
+
+		\Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\BarangsImport, \Illuminate\Support\Facades\Storage::path('seeder/barang.csv'));
 	}
 }

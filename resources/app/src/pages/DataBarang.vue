@@ -25,10 +25,14 @@
                         </div>
                     </template>
 
-                    <!-- <template v-slot:end>
-						<FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block" />
-						<Button label="Export" icon="pi pi-upload" class="p-button-help" @click="exportCSV($event)"  />
-					</template> -->
+                    <template v-slot:end>
+						<Button
+                                label="Print"
+                                icon="pi pi-print"
+                                class="p-button-success mr-2"
+                                @click="printstok"
+                            />
+					</template>
                 </Toolbar>
 
                 <DataTable
@@ -39,6 +43,8 @@
                     :paginator="true"
                     :rows="10"
                     :filters="filters"
+                    v-model:filters="filters" 
+                    filterDisplay="menu"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[5, 10, 25]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
@@ -84,6 +90,10 @@
                             <span class="p-column-title">Category</span>
                             {{ slotProps.data.category }}
                         </template>
+                        <template #filter="{filterModel}">
+                            <InputText type="text" v-model="filterModel.value" class="p-column-filter" placeholder="By Kategori"/>
+                        </template>
+
                     </Column>
                     <!-- <Column header="Image" headerStyle="width:14%; min-width:10rem;">
 						<template #body="slotProps">
@@ -103,6 +113,17 @@
                         </template>
                     </Column>
                     <Column
+                        field="sub_id"
+                        header="SUB ID"
+                        :sortable="true"
+                        headerStyle="width:14%; min-width:8rem;"
+                    >
+                        <template #body="slotProps">
+                            <span class="p-column-title">SUB ID</span>
+                            {{ slotProps.data.sub_id }}
+                        </template>
+                    </Column>
+                    <Column
                         field="nama_barang"
                         header="Nama Barang"
                         :sortable="true"
@@ -113,17 +134,7 @@
                             {{ slotProps.data.nama_barang }}
                         </template>
                     </Column>
-                    <Column
-                        field="code_barang"
-                        header="Kode Barang"
-                        :sortable="true"
-                        headerStyle="width:14%; min-width:10rem;"
-                    >
-                        <template #body="slotProps">
-                            <span class="p-column-title">Kode Barang</span>
-                            {{ slotProps.data.code_barang }}
-                        </template>
-                    </Column>
+                    
                      <Column
                         field="barcode"
                         header="Barcode"
@@ -133,6 +144,7 @@
                         <template #body="slotProps">
                             <span class="p-column-title">Barcode</span>
                             {{ slotProps.data.barcode }}
+                            
                         </template>
                     </Column>
                     <Column
@@ -172,6 +184,7 @@
                         field="harga_satuan"
                         header="Harga Satuan"
                         :sortable="true"
+                        dataType="numeric"
                         headerStyle="width:14%; min-width:10rem;"
                     >
                         <template #body="slotProps">
@@ -204,45 +217,214 @@
 
                 <Dialog
                     v-model:visible="productDialog"
-                    :style="{ width: '450px' }"
-                    header="Product Details"
+                    :style="{ width: '1024px' }"
+                    :header="`Kartu Stok ${mode_edit}`"
                     :modal="true"
                     class="p-fluid"
                 >
-                    <img
-                        :src="'images/product/' + product.image"
-                        :alt="product.image"
-                        v-if="product.image"
-                        width="150"
-                        class="mt-0 mx-auto mb-5 block shadow-2"
-                    />
-                    <div class="field">
-                        <label for="name">Name</label>
+                <div class="grid">
+                    <div class="grid col-12 md:col-6">
+                     <div class="field col-12">
+                            <label for="categoryPick" class="mb-3"
+                                >Pilih Kategori</label
+                            >
+                            <Dropdown
+                                id="categoryPick"
+                                v-model="pickCategoryModel"
+                                :options="categories.category"
+                                optionLabel="label"
+                                placeholder="Pilih Kategori"
+                                 @change="changePickCategory"
+                            >
+                                <template #value="slotProps">
+                                    <div
+                                        v-if="
+                                            slotProps.value && slotProps.value.value
+                                        "
+                                    >
+                                        <span
+                                            :class="
+                                                'product-badge status-' +
+                                                slotProps.value.value
+                                            "
+                                            >{{ slotProps.value.label }}</span
+                                        >
+                                    </div>
+                                    <div
+                                        v-else-if="
+                                            slotProps.value &&
+                                            !slotProps.value.value
+                                        "
+                                    >
+                                        <span
+                                            :class="
+                                                'product-badge status-' +
+                                                slotProps.value.toLowerCase()
+                                            "
+                                            >{{ slotProps.value }}</span
+                                        >
+                                    </div>
+                                    <span v-else>
+                                        {{ slotProps.placeholder }}
+                                    </span>
+                                </template>
+                            </Dropdown>
+                     </div>
+                     <div class="field col-6">
+                            <label for="idCategory">ID Category</label>
+                            <InputText
+                                id="idCategory"
+                                v-model.trim="product.id_category"
+                                disabled
+                                autofocus
+                                class="disable-input"
+                                :class="{ 'p-invalid': submitted && !product.id_category }"
+                            />
+                           
+                        </div>
+                        <div class="field col-6">
+                            <label for="valcategory">Kategori</label>
+                            <InputText
+                                id="valCategory"
+                                v-model.trim="product.category"
+                                disabled
+                                autofocus
+                                class="disable-input"
+                                :class="{ 'p-invalid': submitted && !product.category }"
+                            />
+                            
+                        </div>
+                    </div>
+                    <div class="grid col-12 md:col-6">
+
+                         <div class="field col-12">
+                            <label for="barangPick" class="mb-3"
+                                >Pilih Jenis Barang</label>
+                            <Dropdown
+                                id="barangPick"
+                                v-model="pickBarangModel"
+                                :options="categories.nama_barang"
+                                optionLabel="label"
+                                placeholder="Pilih jenis barang"
+                                @change="changePickBarang"
+                            >
+                                <template #value="slotProps">
+                                    <div
+                                        v-if="
+                                            slotProps.value && slotProps.value.value
+                                        "
+                                    >
+                                        <span
+                                            :class="
+                                                'product-badge status-' +
+                                                slotProps.value.value
+                                            "
+                                            >{{ slotProps.value.label }}</span
+                                        >
+                                    </div>
+                                    <div
+                                        v-else-if="
+                                            slotProps.value &&
+                                            !slotProps.value.value
+                                        "
+                                    >
+                                        <span
+                                            :class="
+                                                'product-badge status-' +
+                                                slotProps.value.toLowerCase()
+                                            "
+                                            >{{ slotProps.value }}</span
+                                        >
+                                    </div>
+                                    <span v-else>
+                                        {{ slotProps.placeholder }}
+                                    </span>
+                                </template>
+                            </Dropdown>
+                        </div>
+                           <div class="field col-6">
+                        <label for="idbarang">ID barang</label>
                         <InputText
-                            id="name"
-                            v-model.trim="product.name"
+                            id="idbarang"
+                            v-model.trim="product.id_barang"
+                            disabled
+                            required="true"
+                            class="disable-input"
+                            autofocus
+                            :class="{ 'p-invalid': submitted && !product.id_barang }"
+                        />
+                        
+                    </div>
+
+                    <div class="field col-6">
+                        <label for="valbarang">Jenis Barang</label>
+                        <InputText
+                            id="valbarang"
+                            v-model.trim="product.nama_barang"
+                            disabled
+                            required="true"
+                            class="disable-input"
+                            autofocus
+                            :class="{ 'p-invalid': submitted && !product.nama_barang }"
+                        />
+                       
+                    </div>
+
+
+                    </div>
+                </div>
+                     
+                <div class="grid">
+
+                    <div class="field col-8">
+                        
+                        <label for="barcode">Barcode</label>
+                        <InputText
+                            id="barcode"
+                            v-model.trim="product.barcode"
+                            required="false"
+                            autofocus
+                            
+                        />
+                    </div>    
+                     <div class="field col-4">  
+                        <label>Scan via HP</label>
+                        <Button
+                            label="Scan"
+                            icon="pi pi-search"
+                            class="p-button-info"
+                            @click="scanNOW"   
+                        />
+                        <StreamBarcodeReader v-if="readyBarcode"
+                          @decode="onDecodeBarcode"
+                          
+                        ></StreamBarcodeReader>
+   
+                     </div>     
+                </div>    
+                    
+
+                 
+                
+
+                    <div class="field">
+                        <label for="uraian">Uraian</label>
+                        <InputText
+                            id="uraian"
+                            v-model.trim="product.uraian"
                             required="true"
                             autofocus
-                            :class="{ 'p-invalid': submitted && !product.name }"
+                            :class="{ 'p-invalid': submitted && !product.uraian }"
                         />
                         <small
                             class="p-invalid"
-                            v-if="submitted && !product.name"
-                            >Name is required.</small
+                            v-if="submitted && !product.uraian"
+                            >Uraian harus diisi.</small
                         >
                     </div>
-                    <div class="field">
-                        <label for="description">Description</label>
-                        <Textarea
-                            id="description"
-                            v-model="product.description"
-                            required="true"
-                            rows="3"
-                            cols="20"
-                        />
-                    </div>
+                   
 
-                    <div class="field">
+                    <!-- <div class="field">
                         <label for="inventoryStatus" class="mb-3"
                             >Inventory Status</label
                         >
@@ -286,9 +468,9 @@
                                 </span>
                             </template>
                         </Dropdown>
-                    </div>
+                    </div> -->
 
-                    <div class="field">
+                    <!-- <div class="field">
                         <label class="mb-3">Category</label>
                         <div class="formgrid grid">
                             <div class="field-radiobutton col-6">
@@ -328,25 +510,39 @@
                                 <label for="category4">Fitness</label>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="formgrid grid">
-                        <div class="field col">
-                            <label for="price">Price</label>
+                        <div class="field col-12 md:col-4">
+                            <label for="harga">Harga Satuan</label>
                             <InputNumber
-                                id="price"
-                                v-model="product.price"
+                                id="harga"
+                                v-model="product.harga_satuan"
                                 mode="currency"
-                                currency="USD"
-                                locale="en-US"
+                                currency="IDR"
+                                locale="id-ID"
+                                
+                            />
+                            <!-- mode="currency"
+                                currency="IDR"
+                                locale="id-ID"
+                                mode="decimal" locale="en-US" :minFractionDigits="2"
+                                 -->
+                        </div>
+                        <div class="field col-12 md:col-4">
+                            <label for="stok">Stok</label>
+                            <InputNumber
+                                id="stok"
+                                v-model="product.stok"
+                                integeronly
                             />
                         </div>
-                        <div class="field col">
-                            <label for="quantity">Quantity</label>
-                            <InputNumber
-                                id="quantity"
-                                v-model="product.quantity"
-                                integeronly
+                        <div class="field col-12 md:col-4">
+                            <label for="stok">Satuan</label>
+                            <InputText
+                                id="satuan"
+                                v-model="product.satuan"
+                                
                             />
                         </div>
                     </div>
@@ -378,8 +574,8 @@
                             style="font-size: 2rem"
                         />
                         <span v-if="product"
-                            >Are you sure you want to delete
-                            <b>{{ product.name }}</b
+                            >Anda yakin menghapus
+                            <b>{{ product.uraian }}</b
                             >?</span
                         >
                     </div>
@@ -411,8 +607,7 @@
                             style="font-size: 2rem"
                         />
                         <span v-if="product"
-                            >Are you sure you want to delete the selected
-                            products?</span
+                            >Anda yakin menghapus barang yang terpilih?</span
                         >
                     </div>
                     <template #footer>
@@ -433,14 +628,23 @@
             </div>
         </div>
     </div>
+
+    
 </template>
 <script>
-import { FilterMatchMode } from "primevue/api";
+
+import {FilterMatchMode,FilterOperator} from 'primevue/api';
 import BarangService from "../service/BarangService.js";
+import { StreamBarcodeReader } from "vue-barcode-reader";
 
 export default {
+    components:{StreamBarcodeReader},
     data() {
         return {
+            categories: {
+                category:[],
+                nama_barang:[]
+            } ,
             products: null,
             productDialog: false,
             deleteProductDialog: false,
@@ -449,11 +653,16 @@ export default {
             selectedProducts: null,
             filters: {},
             submitted: false,
-            statuses: [
-                { label: "INSTOCK", value: "instock" },
-                { label: "LOWSTOCK", value: "lowstock" },
-                { label: "OUTOFSTOCK", value: "outofstock" },
-            ],
+            mode_edit:'Edit',
+            pickCategoryModel: null,
+            pickBarangModel:null,
+            modeEdit:'',
+            readyBarcode:false,
+            isMediaStreamAPISupported:
+                navigator &&
+                navigator.mediaDevices &&
+                "enumerateDevices" in navigator.mediaDevices
+            
         };
     },
     productService: null,
@@ -462,22 +671,81 @@ export default {
         this.initFilters();
     },
     mounted() {
+
         this.productService
             .getBarangs()
-            .then((data) => (this.products = data));
+            .then((data) => {
+                this.products = data
+                // console.log(this.products)
+                });
+
+         this.productService
+            .getBarangCategory()
+            .then((data) => { 
+                this.categories = data 
+                // console.log(this.categories)
+
+                this.categories.category = this.categories.category.map((item)=>{
+                    let barang = {
+                        label: item.category,
+                        value: item.id_category
+                    }
+                    return barang
+                })
+
+                this.categories.nama_barang = this.categories.nama_barang.map((item)=>{
+                    let barang = {
+                        label: item.nama_barang,
+                        value: item.id_barang
+                    }
+                    return barang
+                })
+
+                console.log(this.categories)
+            });
     },
     methods: {
         formatCurrency(value) {
-            if (value)
-                return value.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
+            // if (value)
+            //     return value.toLocaleString("id-ID", {
+            //         style: "currency",
+            //         currency: "IDR",
+            //     });
+            // Create our number formatter.
+            if (value) {
+                  var formatter = new Intl.NumberFormat('id-ID', {
+                  style: 'currency',
+                  currency: 'IDR',
+
+                  // These options are needed to round to whole numbers if that's what you want.
+                  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+                  //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
                 });
+
+                return formatter.format(value); /* $2,500.00 */
+            }
+           
+
             return;
         },
+        changePickCategory(){
+            this.product.id_category = this.pickCategoryModel.value
+            this.product.category = this.pickCategoryModel.label
+        },
+        changePickBarang(){
+            this.product.id_barang = this.pickBarangModel.value
+            this.product.nama_barang = this.pickBarangModel.label
+        },
+        
         openNew() {
-            this.product = {};
+            this.modeEdit = 'new'
+            this.product = {
+                harga_satuan: 0,
+                stok:0,
+                satuan:'bj'
+            };
             this.submitted = false;
+            this.mode_edit = '- Baru';
             this.productDialog = true;
         },
         hideDialog() {
@@ -485,42 +753,56 @@ export default {
             this.submitted = false;
         },
         saveProduct() {
+            console.log(this.product)
             this.submitted = true;
-            if (this.product.name.trim()) {
-                if (this.product.id) {
-                    this.product.inventoryStatus = this.product.inventoryStatus
-                        .value
-                        ? this.product.inventoryStatus.value
-                        : this.product.inventoryStatus;
-                    this.products[this.findIndexById(this.product.id)] =
-                        this.product;
-                    this.$toast.add({
+            if (this.product.category.trim()) {
+                if (this.modeEdit=='new'){
+                    this.productService.saveBarang(this.product,true).then((res) => {
+                        console.log('save',res)
+                        this.$toast.add({
                         severity: "success",
                         summary: "Successful",
                         detail: "Product Updated",
                         life: 3000,
-                    });
+                        });
+                
+                    this.productService
+                        .getBarangs()
+                        .then((data) => {
+                            this.products = data
+                            // console.log(this.products)
+                            });
+                        this.productDialog = false;
+                        this.product = {};
+                    })
                 } else {
-                    this.product.id = this.createId();
-                    this.product.code = this.createId();
-                    this.product.image = "product-placeholder.svg";
-                    this.product.inventoryStatus = this.product.inventoryStatus
-                        ? this.product.inventoryStatus.value
-                        : "INSTOCK";
-                    this.products.push(this.product);
-                    this.$toast.add({
+                    this.productService.saveBarang(this.product,false).then((res) => {
+                        console.log('save edit',res)
+                        this.$toast.add({
                         severity: "success",
                         summary: "Successful",
-                        detail: "Product Created",
+                        detail: "Product Updated",
                         life: 3000,
-                    });
+                        });
+                
+                    this.productService
+                        .getBarangs()
+                        .then((data) => {
+                            this.products = data
+                            // console.log(this.products)
+                            });
+                        this.productDialog = false;
+                        this.product = {};
+                    })
                 }
-                this.productDialog = false;
-                this.product = {};
+                
             }
         },
         editProduct(product) {
+            console.log(product)
+            this.modeEdit = 'edit'
             this.product = { ...product };
+            this.mode_edit = '- Edit';
             this.productDialog = true;
         },
         confirmDeleteProduct(product) {
@@ -528,17 +810,28 @@ export default {
             this.deleteProductDialog = true;
         },
         deleteProduct() {
-            this.products = this.products.filter(
-                (val) => val.id !== this.product.id
-            );
-            this.deleteProductDialog = false;
-            this.product = {};
-            this.$toast.add({
-                severity: "success",
-                summary: "Successful",
-                detail: "Product Deleted",
-                life: 3000,
-            });
+            // this.products = this.products.filter(
+            //     (val) => val.id !== this.product.id
+            // );
+            this.productService.deleteBarang(this.product.id).then((res) => {
+                console.log('del',res)
+                this.deleteProductDialog = false;
+                this.product = {};
+                this.$toast.add({
+                    severity: "success",
+                    summary: "Successful",
+                    detail: "Product Deleted",
+                    life: 3000,
+                });   
+                this.productService
+                        .getBarangs()
+                        .then((data) => {
+                            this.products = data
+                            // console.log(this.products)
+                            }); 
+            })
+
+            
         },
         findIndexById(id) {
             let index = -1;
@@ -566,27 +859,71 @@ export default {
             this.deleteProductsDialog = true;
         },
         deleteSelectedProducts() {
-            this.products = this.products.filter(
-                (val) => !this.selectedProducts.includes(val)
-            );
-            this.deleteProductsDialog = false;
-            this.selectedProducts = null;
-            this.$toast.add({
-                severity: "success",
-                summary: "Successful",
-                detail: "Products Deleted",
-                life: 3000,
-            });
+            // this.products = this.products.filter(
+            //     (val) => !this.selectedProducts.includes(val)
+            // );
+            // console.log(this.selectedProducts)
+            let del = this.selectedProducts.map((item) => {
+                return this.productService.deleteBarang(item.id)  
+            })
+            
+            Promise.all(del).then((val) => {
+                console.log(val)
+                this.productService
+                        .getBarangs()
+                        .then((data) => {
+                            this.products = data
+                            // console.log(this.products)
+                            this.deleteProductsDialog = false;
+                            this.selectedProducts = null;
+                            this.$toast.add({
+                                severity: "success",
+                                summary: "Successful",
+                                detail: "Products Deleted",
+                                life: 3000,
+                            });
+                        }); 
+            }) 
+            
+            
         },
         initFilters() {
             this.filters = {
-                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+                'category': {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.STARTS_WITH}]},
             };
         },
+        printstok(){
+            window.open(
+                  this.productService.parseWeb('/print/stok'),
+                  '_blank' // <- This is what makes it open in a new window.
+                );
+        },
+        onDecodeBarcode(result)
+        {
+            this.product.barcode = JSON.stringify(result)
+            this.readyBarcode = false
+        },
+        scanNOW(){
+            if (this.isMediaStreamAPISupported){
+                this.readyBarcode = true  
+            } else {
+                 this.$toast.add({
+                    severity: "error",
+                    summary: "Barcode media camera not supported",
+                    detail: "Coba di HP kamu",
+                    life: 3000,
+                });   
+            }
+        }
     },
 };
 </script>
 
 <style scoped lang="scss">
 @import "../assets/demo/badges.scss";
+.disable-input{
+        color: green;
+    font-weight: 600;
+}
 </style>

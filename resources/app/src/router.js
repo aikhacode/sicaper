@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import App from "./App.vue";
 import { useStore } from "./store.js";
 
-// import DataBarang from "./pages/DataBarang.vue";
+import DataBarang from "./pages/DataBarang.vue";
 
 const routes = [
     {
@@ -21,12 +21,12 @@ const routes = [
                 component: () => import("./components/Dashboard.vue"),
                 meta: { requiresAuth: true },
             },
-            {
-                path: "/history",
-                name: "history",
-                component: () => import("./components/History.vue"),
-                meta: { requiresAuth: true },
-            },
+            // {
+            //     path: "/history",
+            //     name: "history",
+            //     component: () => import("./components/History.vue"),
+            //     meta: { requiresAuth: true },
+            // },
             {
                 path: "/data-user",
                 name: "datauser",
@@ -36,9 +36,16 @@ const routes = [
             {
                 path: "/data-barang",
                 name: "databarang",
-                component: () => import("./pages/DataBarang.vue"),
+                // component: () => import("./pages/DataBarang.vue"),
+                component: DataBarang,
                 meta: { requiresAuth: true },
             },
+            // {
+            //     path: "/readbarcode",
+            //     name: "readbarcode",
+            //     component: () => import("./components/BarcodeReader.vue"),
+            //     meta: { requiresAuth: true },
+            // },
             {
                 path: "/stok-masuk",
                 name: "stokmasuk",
@@ -51,13 +58,12 @@ const routes = [
                 component: () => import("./pages/StokKeluar.vue"),
                 meta: { requiresAuth: true },
             },
-            {
-                path: "/stok-opname",
-                name: "stokopname",
-                component: () => import("./pages/StokOpname.vue"),
-                meta: { requiresAuth: true },
-            },
-            
+            // {
+            //     path: "/stok-opname",
+            //     name: "stokopname",
+            //     component: () => import("./pages/StokOpname.vue"),
+            //     meta: { requiresAuth: true },
+            // },
         ],
     },
     {

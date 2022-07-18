@@ -48,7 +48,7 @@ export default {
                     items: [{
                         label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard'
                     },
-                     {label: 'History', icon: 'pi pi-fw pi-list', to: '/history'},
+                     // {label: 'History', icon: 'pi pi-fw pi-list', to: '/history'},
                      ]
                 },
 				{
@@ -64,7 +64,7 @@ export default {
                         {label: 'Kartu Stok', icon: 'pi pi-fw pi-server', to: '/data-barang'},
                         {label: "Stok Masuk", icon: "pi pi-fw pi-download", to: "/stok-masuk"},
                         {label: "Stok Keluar", icon: "pi pi-fw pi-upload", to: "/stok-keluar"},
-                        {label: 'Stok Opname', icon: 'pi pi-fw pi-box', to: '/stok-opname'},
+                        // {label: 'Stok Opname', icon: 'pi pi-fw pi-box', to: '/stok-opname'},
                         
                         ]
                 },

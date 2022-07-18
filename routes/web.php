@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PegawaiController;
+use App\Models\Barang;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +14,30 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-
 Route::get('/', function () {
 	return redirect('/app');
 	// return view('welcome');
 });
 
+Route::get('/print/stok', function () {
+	$barang = Barang::all();
+	$header = Schema::getColumnListing(Barang::first()->getTable());
+
+	// $pdf = Pdf::loadview('stok', ['data' => $barang, 'header' => $header]);
+	// return $pdf->stream();
+
+	$pdf = PDF::loadView('stok', ['data' => $barang, 'header' => $header]);
+	return $pdf->inline();
+
+	// $pdf = App::make('dompdf.wrapper');
+	// $pdf->loadHTML('<h1>Test</h1>');
+	// return $pdf->stream();
+});
+
+Route::get('/preview/stok', function () {
+
+	$barang = Barang::all();
+	$header = Schema::getColumnListing(Barang::first()->getTable());
+
+	return view('stok', ['data' => $barang, 'header' => $header]);
+});

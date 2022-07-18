@@ -118,7 +118,7 @@
 			</div>
 		</div>
 
-<!-- 		<div class="col-12">
+ 		<div class="col-12">
 			<div class="card">
 				<h5>Frozen Columns</h5>
                 <ToggleButton v-model="idFrozen" onIcon="pi pi-lock" offIcon="pi pi-lock-open" onLabel="Unfreeze Id" offLabel="Freeze Id" style="width: 10rem" />
@@ -266,7 +266,7 @@
                     </template>
                 </DataTable>
 			</div>
-		</div> -->
+		</div> 
 	</div>
 </template>
 
