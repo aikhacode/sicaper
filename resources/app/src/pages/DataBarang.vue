@@ -395,11 +395,7 @@
                             class="p-button-info"
                             @click="scanNOW"   
                         />
-                        <StreamBarcodeReader 
-                          @decode="onDecodeBarcode"
-                          @error="onScanError"
-                        ></StreamBarcodeReader>
-                        <h1 v-if="scanError">....</h1>
+                       
                      </div>     
                 </div>    
                     
@@ -635,10 +631,10 @@
 
 import {FilterMatchMode,FilterOperator} from 'primevue/api';
 import BarangService from "../service/BarangService.js";
-import { StreamBarcodeReader } from "vue-barcode-reader";
+
 
 export default {
-    components:{StreamBarcodeReader},
+  
     data() {
         return {
             categories: {
@@ -657,12 +653,7 @@ export default {
             pickCategoryModel: null,
             pickBarangModel:null,
             modeEdit:'',
-            readyBarcode:false,
-            isMediaStreamAPISupported:
-                navigator &&
-                navigator.mediaDevices &&
-                "enumerateDevices" in navigator.mediaDevices ,
-            scanError: false,
+           
             
         };
     },
@@ -900,27 +891,12 @@ export default {
                   '_blank' // <- This is what makes it open in a new window.
                 );
         },
-        onDecodeBarcode(result)
-        {
-            this.product.barcode = JSON.stringify(result)
-            this.readyBarcode = false
-        },
         scanNOW(){
-            // if (this.isMediaStreamAPISupported){
-            //     this.readyBarcode = true  
-            // } else {
-            //      this.$toast.add({
-            //         severity: "error",
-            //         summary: "Barcode media camera not supported",
-            //         detail: "Coba di HP kamu",
-            //         life: 3000,
-            //     });   
-            // }
-            this.readyBarcode = true  
-        },
-        onScanError(){
-            this.scanError = true
-        },
+            this.$router.push({name:'readbarcode'})
+        }
+      
+      
+
     },
 };
 </script>

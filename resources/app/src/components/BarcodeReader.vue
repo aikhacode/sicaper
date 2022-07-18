@@ -2,13 +2,21 @@
 	<div class="grid">
 		<div class="col-12">
 			<div class="card">
-				<h5>Empty Page</h5>
-				<p>Use this page to start from scratch and place your custom content.</p>
+				<StreamBarcodeReader
+      @decode="onDecode"
+      
+    ></StreamBarcodeReader>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
+import { StreamBarcodeReader } from "vue-barcode-reader";
+
+const onDecode = (e) =>{
+   
+}
+
 
 </script>

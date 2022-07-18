@@ -40,12 +40,12 @@ const routes = [
                 component: DataBarang,
                 meta: { requiresAuth: true },
             },
-            // {
-            //     path: "/readbarcode",
-            //     name: "readbarcode",
-            //     component: () => import("./components/BarcodeReader.vue"),
-            //     meta: { requiresAuth: true },
-            // },
+            {
+                path: "/readbarcode",
+                name: "readbarcode",
+                component: () => import("./components/BarcodeReader.vue"),
+                meta: { requiresAuth: true },
+            },
             {
                 path: "/stok-masuk",
                 name: "stokmasuk",
