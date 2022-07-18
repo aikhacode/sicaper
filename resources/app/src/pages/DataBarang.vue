@@ -395,11 +395,11 @@
                             class="p-button-info"
                             @click="scanNOW"   
                         />
-                        <StreamBarcodeReader v-if="readyBarcode"
+                        <StreamBarcodeReader 
                           @decode="onDecodeBarcode"
-                          
+                          @error="onScanError"
                         ></StreamBarcodeReader>
-   
+                        <h1 v-if="scanError">....</h1>
                      </div>     
                 </div>    
                     
@@ -661,7 +661,8 @@ export default {
             isMediaStreamAPISupported:
                 navigator &&
                 navigator.mediaDevices &&
-                "enumerateDevices" in navigator.mediaDevices
+                "enumerateDevices" in navigator.mediaDevices ,
+            scanError: false,
             
         };
     },
@@ -916,7 +917,10 @@ export default {
             //     });   
             // }
             this.readyBarcode = true  
-        }
+        },
+        onScanError(){
+            this.scanError = true
+        },
     },
 };
 </script>
