@@ -23,15 +23,16 @@ Route::get('/print/stok', function () {
 	$barang = Barang::all();
 	$header = Schema::getColumnListing(Barang::first()->getTable());
 
-	// $pdf = Pdf::loadview('stok', ['data' => $barang, 'header' => $header]);
-	// return $pdf->stream();
-
-	$pdf = PDF::loadView('stok', ['data' => $barang, 'header' => $header]);
+	$pdf = PDF::loadview('stok', ['data' => $barang, 'header' => $header]);
 	return $pdf->inline();
 
+	// $pdf = PDF::loadView('stok', ['data' => $barang, 'header' => $header]);
+	// return $pdf->inline();
+
 	// $pdf = App::make('dompdf.wrapper');
-	// $pdf->loadHTML('<h1>Test</h1>');
+	// $pdf->loadHTML(view('stok', ['data' => $barang, 'header' => $header]));
 	// return $pdf->stream();
+
 });
 
 Route::get('/preview/stok', function () {

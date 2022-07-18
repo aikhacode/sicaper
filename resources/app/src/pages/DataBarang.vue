@@ -905,16 +905,17 @@ export default {
             this.readyBarcode = false
         },
         scanNOW(){
-            if (this.isMediaStreamAPISupported){
-                this.readyBarcode = true  
-            } else {
-                 this.$toast.add({
-                    severity: "error",
-                    summary: "Barcode media camera not supported",
-                    detail: "Coba di HP kamu",
-                    life: 3000,
-                });   
-            }
+            // if (this.isMediaStreamAPISupported){
+            //     this.readyBarcode = true  
+            // } else {
+            //      this.$toast.add({
+            //         severity: "error",
+            //         summary: "Barcode media camera not supported",
+            //         detail: "Coba di HP kamu",
+            //         life: 3000,
+            //     });   
+            // }
+            this.readyBarcode = true  
         }
     },
 };
