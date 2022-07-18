@@ -621,6 +621,21 @@
                         />
                     </template>
                 </Dialog>
+
+                <Dialog
+                    v-model:visible="barcodeDialog"
+                    :style="{ width: '450px' }"
+                    header="Scan"
+                    :modal="true"
+                >
+                 <div v-show="barcodeDialog">
+                    <StreamBarcodeReader
+                      @decode="onDecodeBarcode"
+                      
+                    ></StreamBarcodeReader>
+                </div>
+                    
+                </Dialog>
             </div>
         </div>
     </div>
@@ -631,10 +646,10 @@
 
 import {FilterMatchMode,FilterOperator} from 'primevue/api';
 import BarangService from "../service/BarangService.js";
-
+import { StreamBarcodeReader } from "vue-barcode-reader";
 
 export default {
-  
+    components:{StreamBarcodeReader},
     data() {
         return {
             categories: {
@@ -653,6 +668,7 @@ export default {
             pickCategoryModel: null,
             pickBarangModel:null,
             modeEdit:'',
+            barcodeDialog:false
            
             
         };
@@ -892,7 +908,11 @@ export default {
                 );
         },
         scanNOW(){
-            this.$router.push({name:'readbarcode'})
+            this.barcodeDialog = true
+        },
+        onDecodeBarcode(e){
+            this.barcodeDialog = false
+            this.product.barcode = e
         }
       
       
