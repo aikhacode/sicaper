@@ -98,6 +98,9 @@ import CodeHighlight from "./AppCodeHighlight.js";
 import BlockViewer from "./BlockViewer.vue";
 
 import {createPinia} from 'pinia'
+import DialogService from 'primevue/dialogservice';
+import DynamicDialog from 'primevue/dynamicdialog';
+import emitter from "@/emit.js"
 
 
 const app = createApp(AppWrapper);
@@ -107,11 +110,13 @@ app.config.globalProperties.$appState = reactive({
     darkTheme: false,
 });
 
+app.config.globalProperties.$emitter = emitter
+app.use(createPinia())
 app.use(PrimeVue, { ripple: true, inputStyle: "outlined" });
 app.use(ConfirmationService);
 app.use(ToastService);
 app.use(router);
-app.use(createPinia())
+
 
 app.directive("tooltip", Tooltip);
 app.directive("ripple", Ripple);
@@ -199,6 +204,8 @@ app.component("TreeTable", TreeTable);
 app.component("TriStateCheckbox", TriStateCheckbox);
 
 app.component("BlockViewer", BlockViewer);
+app.use(DialogService);
+app.component("DynamicDialog", DynamicDialog);
 
 app.mount("#app");
 

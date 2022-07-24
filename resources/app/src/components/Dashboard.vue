@@ -5,7 +5,7 @@
 				<div class="flex justify-content-between mb-3">
 					<div>
 						<span class="block text-500 font-medium mb-3">Barang</span>
-						<div class="text-900 font-medium text-xl">{{store.barang.count}}</div>
+						<div class="text-900 font-medium text-xl">{{store.barang.count}} stok barang.</div>
 					</div>
 					<div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width:2.5rem;height:2.5rem">
 						<i class="pi pi-server text-blue-500 text-xl"></i>
@@ -20,7 +20,7 @@
 				<div class="flex justify-content-between mb-3">
 					<div>
 						<span class="block text-500 font-medium mb-3">Stok Masuk</span>
-						<div class="text-900 font-medium text-xl">{{store.stok.masuk.count}}</div>
+						<div class="text-900 font-medium text-xl">{{store.stok.masuk.count}} stok sudah masuk</div>
 					</div>
 					<div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width:2.5rem;height:2.5rem">
 						<i class="pi pi-download text-orange-500 text-xl"></i>
@@ -35,7 +35,7 @@
 				<div class="flex justify-content-between mb-3">
 					<div>
 						<span class="block text-500 font-medium mb-3">Stok Keluar</span>
-						<div class="text-900 font-medium text-xl">{{store.stok.keluar.count}}</div>
+						<div class="text-900 font-medium text-xl">{{store.stok.keluar.count}} stok telah keluar</div>
 					</div>
 					<div class="flex align-items-center justify-content-center bg-cyan-100 border-round" style="width:2.5rem;height:2.5rem">
 						<i class="pi pi-upload text-cyan-500 text-xl"></i>
@@ -300,7 +300,8 @@ export default {
 	productService: null,
 	themeChangeListener: null,
 	mounted() {
-		this.productService.getProductsSmall().then(data => this.products = data);
+		// this.productService.getProductsSmall().then((data => this.products = data);
+		useStore().refreshDashboard()
 
 		this.themeChangeListener = (event) => {
             if (event.dark)

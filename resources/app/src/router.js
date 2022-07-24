@@ -3,6 +3,7 @@ import App from "./App.vue";
 import { useStore } from "./store.js";
 
 import DataBarang from "./pages/DataBarang.vue";
+import StokMasuk from "./pages/StokMasuk.vue";
 
 const routes = [
     {
@@ -49,13 +50,20 @@ const routes = [
             {
                 path: "/stok-masuk",
                 name: "stokmasuk",
-                component: () => import("./pages/StokMasuk.vue"),
+                // component: () => import("./pages/StokMasuk.vue"),
+                component: StokMasuk,
                 meta: { requiresAuth: true },
             },
             {
                 path: "/stok-keluar",
                 name: "stokkeluar",
                 component: () => import("./pages/StokKeluar.vue"),
+                meta: { requiresAuth: true },
+            },
+            {
+                path: "/preview/stok/rincian",
+                name: "previewstokrincian",
+                component: () => import("./pages/PreviewStok.vue"),
                 meta: { requiresAuth: true },
             },
             // {

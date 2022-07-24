@@ -11,6 +11,9 @@
                                 icon="pi pi-plus"
                                 class="p-button-success mr-2"
                                 @click="openNew"
+                                ref="open_new"
+                                :disabled="store.login.data.role=='user'"
+                               
                             />
                             <Button
                                 label="Delete"
@@ -19,13 +22,19 @@
                                 @click="confirmDeleteSelected"
                                 :disabled="
                                     !selectedProducts ||
-                                    !selectedProducts.length
+                                    !selectedProducts.length || store.login.data.role=='user'
                                 "
                             />
                         </div>
                     </template>
 
                     <template v-slot:end>
+                      <!--   <Button
+                                label="Preview"
+                                icon="pi pi-chevron-up"
+                                class="p-button-success mr-2"
+                                @click="previewstok"
+                            /> -->
 						<Button
                                 label="Print"
                                 icon="pi pi-print"
@@ -49,6 +58,7 @@
                     :rowsPerPageOptions="[5, 10, 25]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                     responsiveLayout="scroll"
+                    @value-change="onFiltered"
                 >
                     <template #header>
                         <div
@@ -160,12 +170,12 @@
                     </Column>
                     <Column
                         field="stok"
-                        header="Stok"
+                        header="Stok Awal"
                         :sortable="true"
                         headerStyle="width:14%; min-width:10rem;"
                     >
                         <template #body="slotProps">
-                            <span class="p-column-title">Stok</span>
+                            <span class="p-column-title">Stok Awal</span>
                             {{ slotProps.data.stok }}
                         </template>
                     </Column>
@@ -204,12 +214,19 @@
                             <Button
                                 icon="pi pi-pencil"
                                 class="p-button-rounded p-button-success mr-2"
+                                :disabled="store.login.data.role=='user'"
                                 @click="editProduct(slotProps.data)"
                             />
                             <Button
                                 icon="pi pi-trash"
                                 class="p-button-rounded p-button-warning mt-2"
                                 @click="confirmDeleteProduct(slotProps.data)"
+                                :disabled="store.login.data.role=='user'"
+                            />
+                             <Button
+                                icon="pi pi-print"
+                                class="p-button-rounded p-button-warning mt-2"
+                                @click="print_kartu_stok(slotProps.data)"
                             />
                         </template>
                     </Column>
@@ -224,10 +241,10 @@
                 >
                 <div class="grid">
                     <div class="grid col-12 md:col-6">
-                     <div class="field col-12">
-                            <label for="categoryPick" class="mb-3"
+                     <div class="field col-8">
+                            <label for="categoryPick" 
                                 >Pilih Kategori</label
-                            >
+                            ><Badge style="margin-left: 10px;" value="1" severity="danger"></Badge>
                             <Dropdown
                                 id="categoryPick"
                                 v-model="pickCategoryModel"
@@ -270,6 +287,17 @@
                                 </template>
                             </Dropdown>
                      </div>
+                     <div class="field col-4">  
+                        <label>Tambah Kategori</label>
+                        <Button
+                            label="Tambah"
+                            icon="pi pi-plus"
+                            class="p-button-info"
+                            @click="onAddCategories"   
+                        />
+                       
+                     </div>
+
                      <div class="field col-6">
                             <label for="idCategory">ID Category</label>
                             <InputText
@@ -300,10 +328,11 @@
                          <div class="field col-12">
                             <label for="barangPick" class="mb-3"
                                 >Pilih Jenis Barang</label>
+                                <Badge style="margin-left: 10px;" value="2" severity="danger"></Badge>
                             <Dropdown
                                 id="barangPick"
                                 v-model="pickBarangModel"
-                                :options="categories.nama_barang"
+                                :options="categories.barang"
                                 optionLabel="label"
                                 placeholder="Pilih jenis barang"
                                 @change="changePickBarang"
@@ -412,101 +441,11 @@
                             autofocus
                             :class="{ 'p-invalid': submitted && !product.uraian }"
                         />
-                        <small
-                            class="p-invalid"
-                            v-if="submitted && !product.uraian"
-                            >Uraian harus diisi.</small
-                        >
+                        
                     </div>
                    
 
-                    <!-- <div class="field">
-                        <label for="inventoryStatus" class="mb-3"
-                            >Inventory Status</label
-                        >
-                        <Dropdown
-                            id="inventoryStatus"
-                            v-model="product.inventoryStatus"
-                            :options="statuses"
-                            optionLabel="label"
-                            placeholder="Select a Status"
-                        >
-                            <template #value="slotProps">
-                                <div
-                                    v-if="
-                                        slotProps.value && slotProps.value.value
-                                    "
-                                >
-                                    <span
-                                        :class="
-                                            'product-badge status-' +
-                                            slotProps.value.value
-                                        "
-                                        >{{ slotProps.value.label }}</span
-                                    >
-                                </div>
-                                <div
-                                    v-else-if="
-                                        slotProps.value &&
-                                        !slotProps.value.value
-                                    "
-                                >
-                                    <span
-                                        :class="
-                                            'product-badge status-' +
-                                            slotProps.value.toLowerCase()
-                                        "
-                                        >{{ slotProps.value }}</span
-                                    >
-                                </div>
-                                <span v-else>
-                                    {{ slotProps.placeholder }}
-                                </span>
-                            </template>
-                        </Dropdown>
-                    </div> -->
-
-                    <!-- <div class="field">
-                        <label class="mb-3">Category</label>
-                        <div class="formgrid grid">
-                            <div class="field-radiobutton col-6">
-                                <RadioButton
-                                    id="category1"
-                                    name="category"
-                                    value="Accessories"
-                                    v-model="product.category"
-                                />
-                                <label for="category1">Accessories</label>
-                            </div>
-                            <div class="field-radiobutton col-6">
-                                <RadioButton
-                                    id="category2"
-                                    name="category"
-                                    value="Clothing"
-                                    v-model="product.category"
-                                />
-                                <label for="category2">Clothing</label>
-                            </div>
-                            <div class="field-radiobutton col-6">
-                                <RadioButton
-                                    id="category3"
-                                    name="category"
-                                    value="Electronics"
-                                    v-model="product.category"
-                                />
-                                <label for="category3">Electronics</label>
-                            </div>
-                            <div class="field-radiobutton col-6">
-                                <RadioButton
-                                    id="category4"
-                                    name="category"
-                                    value="Fitness"
-                                    v-model="product.category"
-                                />
-                                <label for="category4">Fitness</label>
-                            </div>
-                        </div>
-                    </div> -->
+                   
 
                     <div class="formgrid grid">
                         <div class="field col-12 md:col-4">
@@ -640,16 +579,24 @@
         </div>
     </div>
 
+ <DynamicDialog />
     
 </template>
 <script>
-
+import {h} from "vue";
 import {FilterMatchMode,FilterOperator} from 'primevue/api';
 import BarangService from "../service/BarangService.js";
 import { StreamBarcodeReader } from "vue-barcode-reader";
+import Cookie from "js-cookie";
+import axios from "axios"
+import { useStore } from "@/store.js"
+import DialogCategoryCrud from "@/dialogs/DialogCategoryCrud.vue"
+import DialogPrint from "@/dialogs/DialogPrint.vue"
+import Button from 'primevue/button';
 
 export default {
-    components:{StreamBarcodeReader},
+    components:{StreamBarcodeReader,Button},
+    
     data() {
         return {
             categories: {
@@ -668,8 +615,9 @@ export default {
             pickCategoryModel: null,
             pickBarangModel:null,
             modeEdit:'',
-            barcodeDialog:false
-           
+            barcodeDialog:false,
+            filteredData:null,
+            store:useStore(),
             
         };
     },
@@ -677,42 +625,89 @@ export default {
     created() {
         this.productService = new BarangService();
         this.initFilters();
+       
     },
     mounted() {
+            this.refreshBarangs()
+            this.refreshCategory()
+            console.log('mounted')
+            if (useStore().globalEvent.newInputBarang) { 
+                useStore().globalEvent.newInputBarang = false
+                this.openNew();
+            }
+            
+    },
+    methods: {
 
-        this.productService
-            .getBarangs()
-            .then((data) => {
+       onAddCategories(){
+           const dialogRef = this.$dialog.open(DialogCategoryCrud, {
+                props: {
+                    header: 'Tambah Kategori',
+                    style: {
+                        width: '80vw',
+                    },
+                    breakpoints:{
+                        '960px': '80vw',
+                        '640px': '90vw'
+                    },
+                    modal: true
+                },
+                templates: {
+                    footer: () => {
+                        return [
+                            h('div',{class:'p-3'}),
+                         
+                            h(Button, { label: "Close", icon: "pi pi-check", onClick: () => dialogRef.close({ buttonType: 'Yes' }), autofocus: true })
+                        ]
+                    }
+                },
+                onClose: (options) => {
+                    const data = options.data;
+                    if (data) {
+                        this.refreshCategory()
+                        // this.$toast.add({ severity:'info', 'ok', life: 3000 });
+                    }
+                }
+            });
+       },
+        refreshBarangs(){
+             this.productService.getBarangs().then((data) => {
                 this.products = data
                 // console.log(this.products)
                 });
+        },
+        refreshCategory(cat = 'none'){
+            this.productService
+                .getBarangCategory()
+                .then((data) => { 
+                    // this.categories.category = data 
+                    // console.log(this.categories)
 
-         this.productService
-            .getBarangCategory()
-            .then((data) => { 
-                this.categories = data 
-                // console.log(this.categories)
+                    this.categories.category = data.map((item)=>{
+                        let barang = {
+                            label: item.category,
+                            value: item.id_category
+                        }
+                        return barang
+                    })
 
-                this.categories.category = this.categories.category.map((item)=>{
-                    let barang = {
-                        label: item.category,
-                        value: item.id_category
-                    }
-                    return barang
-                })
+                    let category_pick = (cat == 'none') ? this.categories.category[0].value : cat
+                    this.productService.getBarangByCategory(category_pick).then((data)=>{
+                        // this.categories.barang = data
+                        this.categories.barang = data.map((item)=>{
+                            let barang = {
+                                label: item.nama_barang,
+                                value: item.id_barang
+                                }
+                            return barang
+                        })   
 
-                this.categories.nama_barang = this.categories.nama_barang.map((item)=>{
-                    let barang = {
-                        label: item.nama_barang,
-                        value: item.id_barang
-                    }
-                    return barang
-                })
+                        // console.log(this.categories)                 
+                     })
 
-                console.log(this.categories)
-            });
-    },
-    methods: {
+                    
+                });
+        },
         formatCurrency(value) {
             // if (value)
             //     return value.toLocaleString("id-ID", {
@@ -737,15 +732,20 @@ export default {
             return;
         },
         changePickCategory(){
+
             this.product.id_category = this.pickCategoryModel.value
             this.product.category = this.pickCategoryModel.label
+            this.refreshCategory(this.product.id_category)
+            this.pickBarangModel = null
         },
         changePickBarang(){
             this.product.id_barang = this.pickBarangModel.value
             this.product.nama_barang = this.pickBarangModel.label
+            this.product.barcode = this.pickBarangModel
         },
         
         openNew() {
+            this.refreshCategory()
             this.modeEdit = 'new'
             this.product = {
                 harga_satuan: 0,
@@ -755,6 +755,7 @@ export default {
             this.submitted = false;
             this.mode_edit = '- Baru';
             this.productDialog = true;
+            
         },
         hideDialog() {
             this.productDialog = false;
@@ -774,12 +775,7 @@ export default {
                         life: 3000,
                         });
                 
-                    this.productService
-                        .getBarangs()
-                        .then((data) => {
-                            this.products = data
-                            // console.log(this.products)
-                            });
+                        this.refreshBarangs()
                         this.productDialog = false;
                         this.product = {};
                     })
@@ -792,13 +788,9 @@ export default {
                         detail: "Product Updated",
                         life: 3000,
                         });
-                
-                    this.productService
-                        .getBarangs()
-                        .then((data) => {
-                            this.products = data
-                            // console.log(this.products)
-                            });
+                        
+                        this.refreshBarangs()
+                    
                         this.productDialog = false;
                         this.product = {};
                     })
@@ -807,6 +799,7 @@ export default {
             }
         },
         editProduct(product) {
+            this.refreshCategory()
             console.log(product)
             this.modeEdit = 'edit'
             this.product = { ...product };
@@ -831,12 +824,7 @@ export default {
                     detail: "Product Deleted",
                     life: 3000,
                 });   
-                this.productService
-                        .getBarangs()
-                        .then((data) => {
-                            this.products = data
-                            // console.log(this.products)
-                            }); 
+                this.refreshBarangs()
             })
 
             
@@ -901,14 +889,102 @@ export default {
                 'category': {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.STARTS_WITH}]},
             };
         },
+        previewstok(){
+            this.$router.push({path:'/preview/stok/rincian'})
+        },
+        print_kartu_stok(e){
+            console.log(e)
+            const dialogRef = this.$dialog.open(DialogPrint, {
+                props: {
+                    header: 'Print Kartu Stok',
+                    style: {
+                        width: '80vw',
+                    },
+                    breakpoints:{
+                        '960px': '80vw',
+                        '640px': '90vw'
+                    },
+                    modal: true
+                },
+                data:{
+                    type:'print-kartu-stok',
+                    barcode:e.barcode,
+                },
+                templates: {
+                   
+                },
+                onClose: (options) => {
+                    const data = options.data;
+                    if (data) {
+                   
+                    }
+                }
+            });
+        },
         printstok(){
-            window.open(
-                  this.productService.parseWeb('/print/stok'),
-                  '_blank' // <- This is what makes it open in a new window.
-                );
+              const dialogRef = this.$dialog.open(DialogPrint, {
+                props: {
+                    header: 'Print Rincian Persediaan',
+                    style: {
+                        width: '80vw',
+                    },
+                    breakpoints:{
+                        '960px': '80vw',
+                        '640px': '90vw'
+                    },
+                    modal: true
+                },
+                data:{
+                    type:'print-stok'
+                },
+                templates: {
+                    // footer: () => {
+                    //     return [
+                    //         h('div',{class:'p-3'}),
+                         
+                    //         h(Button, { label: "Close", icon: "pi pi-check", onClick: () => dialogRef.close({ buttonType: 'Yes' }), autofocus: true })
+                    //     ]
+                    // }
+                },
+                onClose: (options) => {
+                    const data = options.data;
+                    if (data) {
+                        // this.refreshCategory()
+                        // this.$toast.add({ severity:'info', 'ok', life: 3000 });
+                    }
+                }
+            });
+            // console.log(this.products)
+            // axios.post(this.productService.parseWeb('/print/stok'),{data:this.filteredData})
+            // .then((res) => {console.log(res)})
+            
+           
+        },
+        onFiltered(e){
+            this.filteredData = e
+            // Cookie.set('stokprint',JSON.stringify(this.filteredData))
+
         },
         scanNOW(){
-            this.barcodeDialog = true
+
+                
+            if (navigator &&
+                navigator.mediaDevices &&
+                "enumerateDevices" in navigator.mediaDevices) {
+                 this.barcodeDialog = true
+                 console.log('yes')
+            } else {
+                console.log('no')
+                 this.$toast.add({
+                    severity: "error",
+                    summary: "Barcode not supported",
+                    detail: "Silakan coba akses dari HP",
+                    life: 3000,
+                });   
+              this.barcodeDialog = false
+            }
+
+            
         },
         onDecodeBarcode(e){
             this.barcodeDialog = false

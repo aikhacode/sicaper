@@ -33,8 +33,13 @@ import AppConfig from './AppConfig.vue';
 import AppFooter from './AppFooter.vue';
 import {useStore} from './store.js';
 
+
 export default {
     emits: ['change-theme'],
+    mounted(){
+        // console.log()
+     
+    },
     data() {
         return {
             store: useStore(),

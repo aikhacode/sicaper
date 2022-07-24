@@ -46,16 +46,21 @@ class BarangController extends Controller {
 		$id = $barang->id;
 		$sub_id = sprintf("ID-%1$07d", $id) . "/1";
 		$fields['sub_id'] = $sub_id;
-		return Barang::find($id)->update($fields);
+		Barang::find($id)->update($fields);
+		return Barang::find($id);
 
 	}
 
 	public function get_all_category() {
-		$data = array(
-			'category' => Barang::select(['id_category', 'category'])->groupBy(['id_category', 'category'])->get(),
-			'nama_barang' => Barang::select(['id_barang', 'nama_barang'])->groupBy(['id_barang', 'nama_barang'])->get(),
-		);
-		return response($data);
+		// $data = array(
+		// 	'category' => Barang::select(['id_category', 'category'])->groupBy(['id_category', 'category'])->get(),
+		// 	'nama_barang' => Barang::select(['id_barang', 'nama_barang'])->groupBy(['id_barang', 'nama_barang'])->get(),
+		// );
+		return Barang::select(['id_category', 'category'])->groupBy(['id_category', 'category'])->get();
+	}
+
+	public function get_barang_by_category($category) {
+		return Barang::select(['id_barang', 'nama_barang'])->where('id_category', '=', $category)->groupBy(['id_barang', 'nama_barang'])->get();
 	}
 
 	/**

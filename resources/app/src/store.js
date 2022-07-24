@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import {parseApi} from "@/func.js"
 // useStore could be anything like useUser, useCart
 // the first argument is a unique id of the store across your application
 // login api get data : {
@@ -13,6 +14,8 @@ export const useStore = defineStore("main", {
             login: {
                 userName: "",
                 password: "",
+                userId:"",
+                email:"",
                 data: {
                     role: "Admin",
                 },
@@ -37,6 +40,9 @@ export const useStore = defineStore("main", {
                     count: 0,
                 },
             },
+            globalEvent: {
+                newInputBarang:false
+            }
         };
     },
     actions: {
@@ -72,6 +78,7 @@ export const useStore = defineStore("main", {
         },
         async doLogin(obj) {
             let api = this.parseApi();
+
             try {
                 let res = await axios.post(api + "/login", {
                     email: obj.email,
@@ -80,6 +87,10 @@ export const useStore = defineStore("main", {
                 console.log(res.data);
                 this.authenticated = true;
                 this.token = res.data.token;
+                this.login.userName = res.data.user.name;
+                this.login.email = res.data.user.email;
+                this.login.userId = res.data.user.id;
+                this.login.data.role = res.data.user.role;
             } catch (err) {
                 console.log(err.response.status);
                 this.authenticated = false;
@@ -106,13 +117,39 @@ export const useStore = defineStore("main", {
                 let res = await axios.request(reqOptions);
 
                 this.token = "";
+                this.login.userName = "";
+                this.login.email = "";
+                this.login.userId ="";
                 this.authenticated = false;
             } catch (err) {}
 
             return !this.authenticated;
         },
         parseApi() {
-            return `${location.protocol}//${location.hostname}/api`;
+            // return `${location.protocol}//${location.hostname}/api`;
+            return parseApi();
         },
+        async refreshDashboard(){
+              let api = this.parseApi();
+            
+                let headersList = {
+                    Accept: "application/json",
+                    // "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+                    Authorization: `Bearer ${this.token}`,
+                };
+
+                let reqOptions = {
+                    url: this.parseApi() + "/dashboard",
+                    method: "GET",
+                    headers: headersList,
+                };
+
+                return axios.request(reqOptions).then((res) => {
+                    this.barang.count = res.data.barang.count
+                    this.stok.masuk.count = res.data.stok.masuk.count
+                    this.stok.keluar.count = res.data.stok.keluar.count
+                });
+        }
+
     },
 });
