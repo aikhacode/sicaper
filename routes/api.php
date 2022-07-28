@@ -6,8 +6,8 @@ use App\Http\Controllers\KeluarController;
 use App\Http\Controllers\MasukController;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,58 +33,57 @@ Route::get('/test', function () {
 // });
 
 // Protected routes
+Route::get('/bro', [AuthController::class, 'index']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-	Route::delete('/bro/delete/{email}',function(Request $request , $email){
-			$f = $request->all();
-			$usr = \App\Models\User::where('email','=',$email)->delete();
-			return response([$usr,$email,$f]);
+	Route::delete('/bro/delete/{email}', function (Request $request, $email) {
+		$f = $request->all();
+		$usr = \App\Models\User::where('email', '=', $email)->delete();
+		return response([$usr, $email, $f]);
 
 	});
-	Route::post('/bro/update', function(Request $request){
+	Route::post('/bro/update', function (Request $request) {
 		$request->validate([
 			'name' => 'required',
 			'email' => 'required|email',
-			'password' =>'required',
+			'password' => 'required',
 			'password_confirmation' => 'required',
-			'role' => 'required'
+			'role' => 'required',
 		]);
 
 		$fields = $request->all();
 
 		$email = $fields['email'];
 
-		
 		$data = ['name' => $fields['name'],
-				 'password' => bcrypt($fields['password']),
-				 			
-				];
+			'password' => bcrypt($fields['password']),
+
+		];
 
 		if ($fields['mode'] == 'old') {
 
-			$user = DB::table("users")->where('email','=',$email);
-			
+			$user = DB::table("users")->where('email', '=', $email);
+
 			if (!empty($user)) {
-				$ret=true;
+				$ret = true;
 				$user->update($data);
-				
+
 			} else {
 				$ret = false;
 			}
-		} elseif ($fields['mode'] == 'new'){
+		} elseif ($fields['mode'] == 'new') {
 			$user = \App\Models\User::create([
 				'name' => $fields['name'],
 				'email' => $fields['email'],
 				'password' => bcrypt($fields['password']),
-				'role' => $fields['role']
+				'role' => $fields['role'],
 			]);
-			
+
 			$ret = $fields;
 			$token = $user->createToken('myapptoken')->plainTextToken;
 		}
-		
 
-		return response($ret,(!empty($user)) ? 200 : 400);
+		return response($ret, (!empty($user)) ? 200 : 400);
 
 	});
 
@@ -98,8 +97,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 			'stok' => array('masuk' => $masuk, 'keluar' => $keluar),
 		));
 	});
-
-	Route::get('/bro', [AuthController::class, 'index']);
 
 	Route::get('/categories', function () {
 

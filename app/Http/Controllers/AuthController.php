@@ -31,8 +31,6 @@ class AuthController extends Controller {
 		return response($response, 201);
 	}
 
-	
-
 	public function login(Request $request) {
 		$fields = $request->validate([
 			'email' => 'required|string',
@@ -68,7 +66,7 @@ class AuthController extends Controller {
 	}
 
 	public function index() {
-		return User::get(['name', 'email', 'role']);
+		return User::get(['name', 'email', 'role', 'username']);
 
 	}
 }

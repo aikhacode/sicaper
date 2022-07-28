@@ -2,7 +2,7 @@
 	<div class="layout-footer">
 		<img alt="Logo" :src="footerImage()" height="20" class="mr-2" />
 		by
-		<span class="font-medium ml-2">UPTD Puskesmas Ngujung - fastkrisna</span>
+		<span class="font-medium ml-2">UPTD Puskesmas Ngujung - <a href="http://zeroninth.my.id/fastkrisna/">fastkrisna</a></span>
 	</div>
 </template>
 

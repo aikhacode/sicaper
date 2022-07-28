@@ -1,1 +1,0 @@
-import{_ as n,B as r,o,c as s}from"./index.cf94e5d9.js";const c={data(){return{html:null}},mounted(){fetch(r("/preview/rincianstok?start=2022-07-01&end=2022-07-24")).then(e=>{this.html=e.text()})}},a=["innerHTML"];function i(e,l,_,p,t,h){return o(),s("section",{innerHTML:t.html},null,8,a)}const u=n(c,[["render",i]]);export{u as default};

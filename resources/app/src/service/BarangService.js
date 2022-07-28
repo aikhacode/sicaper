@@ -15,6 +15,20 @@ export default class BarangService {
 		}
 	}
 
+	getBarangByBarcode(barcode) {
+        let headersList = {
+            Accept: "application/json",
+            // "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+            Authorization: `Bearer ${useStore().token}`,
+        };
+        let reqOptions = {
+            url: parseApi("/barang/barcode/" + barcode),
+            method: "GET",
+            headers: headersList,
+        };
+        return axios(reqOptions).then((res) => res.data);
+    }
+
     getBarangCategory() {
   //   	let headersList = {
 		// 	Accept: "application/json",

@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>LAPORAN STOK</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" /> -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-4.6.2/css/bootstrap.min.css')}}">
 </head>
 <body>
 	<style type="text/css">
@@ -46,7 +45,7 @@
 }
 .deskripsi td {
         border:solid 1px black;
-		
+
     }
 table.deksripsi{
 	width:80%;
@@ -77,7 +76,7 @@ table.deskripsi td {
 		<h5 class=" text-center mb-2">KARTU PERSEDIAAN </h5>
 		<h5 class="text-center mb-4">{{$periode}}</h5>
 
-		
+
 	<table style="display:block;margin-left:10%;margin-bottom:1%">
 		<tbody>
 		<tr>
@@ -86,8 +85,8 @@ table.deskripsi td {
 		<tr>
 			<td>Barcode</td><td>:</td><td>{{$barcode}}</td>
 		</tr>
-		
-		
+
+
 
 		</tbody>
 	</table>
@@ -121,9 +120,9 @@ table.deskripsi td {
 			<td>Harga Satuan</td>
 			<td>Jumlah Stok</td>
 			<td>Rupiah</td>
-			
 
-				
+
+
 			</tr>
 
 			@foreach($data as $item)
@@ -135,12 +134,12 @@ table.deskripsi td {
 				])> {{$item[$key[1]]}}
 				</td>
 			@endforeach
-				
-					
-				
+
+
+
 			</tr>
 			@endforeach
-		
+
 
 
 

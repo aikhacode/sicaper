@@ -1,5 +1,5 @@
 
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{{ asset('css/bootstrap-4.6.2/css/bootstrap.min.css')}}">
 	<style type="text/css">
 		table tr td,
 		table tr th{

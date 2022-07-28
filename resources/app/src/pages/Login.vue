@@ -48,6 +48,27 @@
                     </div>
 
                     <div class="w-full md:w-10 mx-auto">
+                     <label for="nama" class="block text-900 text-xl font-medium mb-2">Username</label>
+                        <Dropdown @change="onChangeUser" class="w-full mb-3 h-49" v-model="selectedUser" :options="users" optionLabel="name" :filter="true" placeholder="Pilih user" :showClear="true">
+                            <template #value="slotProps">
+                                <div class="country-item country-item-value" v-if="slotProps.value">
+                                    
+                                    <div>{{slotProps.value.name}}</div>
+                                </div>
+                                <span v-else>
+                                    {{slotProps.placeholder}}
+                                </span>
+                            </template>
+                            <template #option="slotProps">
+                                <div class="country-item">
+                                    
+                                    <div>{{slotProps.option.name}}</div>
+                                </div>
+                            </template>
+                        </Dropdown>
+                    </div>
+
+                    <div class="w-full md:w-10 mx-auto">
                         <label
                             for="email1"
                             class="block text-900 text-xl font-medium mb-2"
@@ -110,10 +131,13 @@
 <script>
 import { useStore } from "@/store.js";
 import { useRouter } from "vue-router";
+import Service from "@/service/UserService"
 
 export default {
     data() {
         return {
+             users:[],
+            selectedUser:{},
             email: "test@sicaper.ujung",
             password: "12345",
             checked: true,
@@ -123,7 +147,24 @@ export default {
     },
     created() {
         // console.log(this.store.parseApi())
+        this.UserService = Service
     },
+    mounted(){
+        this.UserService.getUsers().then((res)=>{
+            console.log('user res',res)
+            this.users = res.map((item)=>{
+                return {
+                    name:item.username,
+                    value:item.username,
+                    email:item.email,
+                }
+            })
+
+            console.log('user',this.users)
+
+        })
+    },
+    userService:null,
     computed: {
         logoColor() {
             if (this.$appState.darkTheme) return "white";
@@ -141,6 +182,11 @@ export default {
                 this.router.push("/dashboard");
             }
         },
+        onChangeUser(){
+            console.log(this.selectedUser)
+            this.email = this.selectedUser.email
+            this.password=''
+        },
     },
 };
 </script>
@@ -154,5 +200,9 @@ export default {
 .pi-eye-slash {
     transform: scale(1.6);
     margin-right: 1rem;
+}
+
+.h-49{
+    height: 49px;
 }
 </style>

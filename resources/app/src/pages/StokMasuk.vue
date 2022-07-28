@@ -919,6 +919,7 @@ export default {
             // Cookie.set('stokprint',JSON.stringify(this.filteredData))
         },
         scanNOW() {
+            // this.barcodeDialog = true;
             if (
                 navigator &&
                 navigator.mediaDevices &&
@@ -931,7 +932,7 @@ export default {
                 this.$toast.add({
                     severity: "error",
                     summary: "Barcode not supported",
-                    detail: "Silakan coba akses dari HP",
+                    detail: "Silakan coba akses dari HP/address via https",
                     life: 3000,
                 });
                 this.barcodeDialog = false;

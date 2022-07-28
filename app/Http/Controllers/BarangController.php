@@ -19,7 +19,7 @@ class BarangController extends Controller {
 	}
 
 	public function get_by_barcode($barcode) {
-		return Barang::where('barcode', $barcode)->get();
+		return Barang::where('barcode', $barcode)->get()[0];
 	}
 
 	/**

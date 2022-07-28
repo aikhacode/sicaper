@@ -71,6 +71,13 @@
                                     v-model="filters['global'].value"
                                     placeholder="Search..."
                                 />
+                                <Button
+                                    label="Scan"
+                                    icon="pi pi-search"
+                                    class="md:ml-3 sm:mt-3 p-button-info"
+                                    @click="scanNOW('search')"
+                                />
+                               
                             </span>
                         </div>
                     </template>
@@ -422,7 +429,7 @@
                             label="Scan"
                             icon="pi pi-search"
                             class="p-button-info"
-                            @click="scanNOW"   
+                            @click="scanNOW('only')"   
                         />
                        
                      </div>     
@@ -570,7 +577,8 @@
                  <div v-show="barcodeDialog">
                     <StreamBarcodeReader
                       @decode="onDecodeBarcode"
-                      
+                      @error="onErrorBarcode"
+                      @loaded="onLoaded"
                     ></StreamBarcodeReader>
                 </div>
                     
@@ -580,6 +588,8 @@
     </div>
 
  <DynamicDialog />
+
+
     
 </template>
 <script>
@@ -618,6 +628,9 @@ export default {
             barcodeDialog:false,
             filteredData:null,
             store:useStore(),
+            searchBarcode:false,
+             
+             test1:'',
             
         };
     },
@@ -635,10 +648,12 @@ export default {
                 useStore().globalEvent.newInputBarang = false
                 this.openNew();
             }
+                // this.filters['global'].value = '88888'
+            this.test1 = 'coba'
             
     },
     methods: {
-
+         
        onAddCategories(){
            const dialogRef = this.$dialog.open(DialogCategoryCrud, {
                 props: {
@@ -741,7 +756,7 @@ export default {
         changePickBarang(){
             this.product.id_barang = this.pickBarangModel.value
             this.product.nama_barang = this.pickBarangModel.label
-            this.product.barcode = this.pickBarangModel
+            // this.product.barcode = this.pickBarangModel
         },
         
         openNew() {
@@ -965,12 +980,14 @@ export default {
             // Cookie.set('stokprint',JSON.stringify(this.filteredData))
 
         },
-        scanNOW(){
+        scanNOW(mode){
 
-                
+             // this.barcodeDialog = true
+
             if (navigator &&
                 navigator.mediaDevices &&
                 "enumerateDevices" in navigator.mediaDevices) {
+                 if (mode=='search') this.searchBarcode = true; else this.searchBarcode = false; 
                  this.barcodeDialog = true
                  console.log('yes')
             } else {
@@ -978,7 +995,7 @@ export default {
                  this.$toast.add({
                     severity: "error",
                     summary: "Barcode not supported",
-                    detail: "Silakan coba akses dari HP",
+                    detail: "Silakan coba akses dari HP/address via https",
                     life: 3000,
                 });   
               this.barcodeDialog = false
@@ -988,7 +1005,20 @@ export default {
         },
         onDecodeBarcode(e){
             this.barcodeDialog = false
-            this.product.barcode = e
+            // this.filters['global'].value = e
+            if (searchBarcode){
+                this.filters['global'].value = e
+            } else {
+                this.product.barcode = e    
+            }
+            
+        },
+        onErrorBarcode()
+        {
+            alert('error');
+        },
+        onLoaded(){
+          // alert('load');  
         }
       
       

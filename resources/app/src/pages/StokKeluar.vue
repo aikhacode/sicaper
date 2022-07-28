@@ -841,6 +841,7 @@ export default {
             // Cookie.set('stokprint',JSON.stringify(this.filteredData))
         },
         scanNOW() {
+            // this.barcodeDialog = true;
             if (
                 navigator &&
                 navigator.mediaDevices &&
@@ -853,7 +854,7 @@ export default {
                 this.$toast.add({
                     severity: "error",
                     summary: "Barcode not supported",
-                    detail: "Silakan coba akses dari HP",
+                    detail: "Silakan coba akses dari HP/address via https",
                     life: 3000,
                 });
                 this.barcodeDialog = false;
@@ -871,6 +872,7 @@ export default {
                 this.product.satuan = selectedBarang.satuan;
                 this.product.harga_satuan = selectedBarang.harga_satuan;
                 this.product.sub_id = selectedBarang.sub_id;
+                // alert(this.product.nama_barang)
             });
         },
         actionSelectedPickBarang(selectedBarang) {
