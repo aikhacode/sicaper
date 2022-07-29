@@ -79,7 +79,7 @@
                     <Column field="sub_id" header="Sub ID"></Column>
                     <Column field="harga_satuan" header="Harga Satuan">
                         <template #body="slotProps">
-                            {{ slotProps.data.harga_satuan }}
+                            {{ formatCurrency(slotProps.data.harga_satuan*1) }}
                         </template>
                     </Column>
                     <Column field="stok" header="Stok Awal"
@@ -105,10 +105,10 @@
                         <template #body="slotProps">
                             <div class="text-right w-full">
                                 {{
-                                    (slotProps.data.stok +
+                                    formatCurrency((slotProps.data.stok +
                                         slotProps.data.stok_masuk -
                                         slotProps.data.stok_keluar) *
-                                    slotProps.data.harga_satuan
+                                    slotProps.data.harga_satuan)
                                 }}
                             </div>
                         </template>
@@ -176,9 +176,12 @@ onMounted(async () => {
     sum.rupiah = 0;
 
     products.value.map((item) => {
-        sum.awal += item.stok;
-        sum.masuk += item.stok_masuk;
-        sum.keluar += item.stok_keluar;
+        console.log('item',item)
+        //convert string to number
+
+        sum.awal += item.stok *1;
+        sum.masuk += item.stok_masuk * 1 ;
+        sum.keluar += item.stok_keluar * 1 ;
         sum.rupiah +=
             (item.stok + item.stok_masuk - item.stok_keluar) *
             item.harga_satuan;

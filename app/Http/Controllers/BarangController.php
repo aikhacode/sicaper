@@ -142,7 +142,7 @@ class BarangController extends Controller {
 	}
 
 	public function get_stok_akhir(Request $request, $barcode) {
-		$barangs = Barang::selectRaw("barangs.*,(SELECT SUM(jumlah) FROM masuks WHERE masuks.sub_id=barangs.sub_id) as stok_masuk,(SELECT SUM(jumlah) FROM keluars WHERE keluars.sub_id=barangs.sub_id) as stok_keluar")
+		$barangs = Barang::selectRaw("barangs.*,(SELECT IFNULL(SUM(jumlah),0) FROM masuks WHERE masuks.sub_id=barangs.sub_id) as stok_masuk,(SELECT IFNULL(SUM(jumlah),0) FROM keluars WHERE keluars.sub_id=barangs.sub_id) as stok_keluar")
 			->where('barangs.barcode', $barcode)
 			->get();
 
