@@ -42,7 +42,8 @@ export const useStore = defineStore("main", {
             },
             globalEvent: {
                 newInputBarang:false
-            }
+            },
+            previewstok:{},
         };
     },
     actions: {

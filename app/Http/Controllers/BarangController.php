@@ -11,10 +11,17 @@ class BarangController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index() {
+	public function index(Request $request) {
+		if ($request->query('all')) {
+			return Barang::all();
+			return response($data);
+		} else {
+			$barangs = Barang::selectRaw("barangs.*,(SELECT IFNULL(SUM(jumlah),0) FROM masuks WHERE masuks.sub_id=barangs.sub_id) as stok_masuk,(SELECT IFNULL(SUM(jumlah),0) FROM keluars WHERE keluars.sub_id=barangs.sub_id) as stok_keluar ")
+				->havingRaw('(barangs.stok+stok_masuk-stok_keluar)>0')
+				->get();
 
-		return Barang::latest()->get();
-		//    return response($data);
+			return response($barangs);
+		}
 
 	}
 
@@ -78,7 +85,7 @@ class BarangController extends Controller {
 			'id_barang' => 'required',
 			'nama_barang' => 'required',
 			'uraian' => 'required',
-			'stok' => 'required',
+			// 'stok' => 'required',
 			'satuan' => 'required',
 			'harga_satuan' => 'required',
 		]);
@@ -132,5 +139,22 @@ class BarangController extends Controller {
 	 */
 	public function destroy($id) {
 		return Barang::destroy($id);
+	}
+
+	public function get_stok_akhir(Request $request, $barcode) {
+		$barangs = Barang::selectRaw("barangs.*,(SELECT SUM(jumlah) FROM masuks WHERE masuks.sub_id=barangs.sub_id) as stok_masuk,(SELECT SUM(jumlah) FROM keluars WHERE keluars.sub_id=barangs.sub_id) as stok_keluar")
+			->where('barangs.barcode', $barcode)
+			->get();
+
+		return response($barangs);
+
+	}
+
+	public function get_id_by_sub_id($sub_id) {
+		$brg = Barang::where('sub_id', '=', base64_decode($sub_id))->get();
+		if (count($brg) > 0) {
+			return response($brg[0]->id);
+		}
+		return response(-1, 401);
 	}
 }

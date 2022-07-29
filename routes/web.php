@@ -747,17 +747,20 @@ Route::get('/print/rincianstok', function (Request $request) {
 	// ->get();
 	// $awal = DB::select("SELECT *, (SELECT SUM(jumlah) from masuks WHERE masuks.sub_id=barangs.sub_id AND DATE(masuks.tgl_masuk) < '2022-08-01' ) as jml_msk, (SELECT SUM(jumlah) from keluars WHERE keluars.sub_id=barangs.sub_id AND DATE(keluars.tgl_keluar) < '2022-08-01' ) as jml_klr FROM barangs GROUP BY jml_msk,jml_klr HAVING jml_msk>0 OR jml_klr>0");
 
-	$awal = DB::select("SELECT *,SUM(jml_msk) as jumlah_masuk,SUM(total_msk) as total_masuk,SUM(jml_klr) as jumlah_keluar,SUM(total_klr) as total_keluar FROM (SELECT *,(SELECT SUM(jumlah) from masuks
-			WHERE masuks.sub_id=barangs.sub_id AND DATE(masuks.tgl_masuk) < '{$periode_start}' ) as jml_msk,
-			(SELECT SUM(jumlah*harga_satuan) from masuks
-			WHERE masuks.sub_id=barangs.sub_id AND DATE(masuks.tgl_masuk) < '{$periode_start}' ) as total_msk,
- 			(SELECT SUM(jumlah) from keluars
+	$awal = DB::select("SELECT *,
+IFNULL(SUM(jml_msk),0) as jumlah_masuk,IFNULL(SUM(total_msk),0) as total_masuk,
+IFNULL(SUM(jml_klr),0) as jumlah_keluar,IFNULL(SUM(total_klr),0) as total_keluar
+	FROM (SELECT *,(SELECT IFNULL(SUM(jumlah),0) from masuks
+			WHERE masuks.sub_id=barangs.sub_id AND DATE(masuks.tgl_masuk) < '{$periode_start}' )+stok as jml_msk,
+			(SELECT IFNULL(SUM(jumlah*harga_satuan),0) from masuks
+			WHERE masuks.sub_id=barangs.sub_id AND DATE(masuks.tgl_masuk) < '{$periode_start}' )+(stok*harga_satuan) as total_msk,
+ 			(SELECT IFNULL(SUM(jumlah),0) from keluars
 			WHERE keluars.sub_id=barangs.sub_id AND DATE(keluars.tgl_keluar) < '{$periode_start}' ) as jml_klr,
-			(SELECT SUM(jumlah*harga_satuan) from keluars
+			(SELECT IFNULL(SUM(jumlah*harga_satuan),0) from keluars
 			WHERE keluars.sub_id=barangs.sub_id AND DATE(keluars.tgl_keluar) < '{$periode_start}' ) as total_klr
   			FROM barangs
-			HAVING jml_msk>0 OR jml_klr>0) AS b
-			GROUP BY barcode");
+			HAVING barangs.stok>0 OR jml_msk>0 OR jml_klr>0) AS b
+GROUP BY barcode");
 
 	// return response($awal);
 

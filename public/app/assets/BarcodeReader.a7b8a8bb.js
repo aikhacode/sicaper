@@ -1,1 +1,0 @@
-import{o as a,c,a as e,f as r,q as t,S as d,s as n}from"./index.44bc9131.js";const _={class:"grid"},i={class:"col-12"},l={class:"card"},f={__name:"BarcodeReader",setup(m){const o=s=>{n.go(-1)};return(s,p)=>(a(),c("div",_,[e("div",i,[e("div",l,[r(t(d),{onDecode:o})])])]))}};export{f as default};

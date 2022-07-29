@@ -39,7 +39,9 @@
                         />
                     </div>
                 </template>
-                <template #empty> Barang tidak ditemukan </template>
+                <template #empty>
+                    Barang tidak ditemukan. Tunggu sebentar...
+                </template>
 
                 <Column field="barcode" header="Barcode"></Column>
                 <Column field="sub_id" header="Sub ID"></Column>
@@ -52,7 +54,7 @@
     </Dialog>
 </template>
 <script setup>
-import { ref, reactive, inject } from "vue";
+import { ref, reactive, inject, onMounted } from "vue";
 import emitter from "@/emit.js";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
 import MasukService from "@/service/MasukService.js";
@@ -62,6 +64,7 @@ const emit = defineEmits(["selected"]);
 const productService = new MasukService();
 const flagVisible = ref(false);
 const pickBarang = ref();
+const loading = ref(false);
 
 // const selectedPickbarang = ref()
 const filtersPickBarang = reactive({
@@ -84,5 +87,9 @@ emitter.on("pick-barang-dialog", (e) => {
     productService.getPickBarang().then((data) => {
         pickBarang.value = data;
     });
+});
+
+onMounted(() => {
+    loading.value = true;
 });
 </script>

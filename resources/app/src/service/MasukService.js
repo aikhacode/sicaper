@@ -21,6 +21,20 @@ export default class MasukService {
         return useStore().login.userId;
     }
 
+    async getBarangId(subId) {
+        let headersList = {
+            Accept: "application/json",
+            // "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+            Authorization: `Bearer ${useStore().token}`,
+        };
+        let reqOptions = {
+            url: parseApi(`/barang/search/subid/${subId}`),
+            method: "GET",
+            headers: headersList,
+        };
+        return axios(reqOptions).then((res) => res.data);
+    }
+
     getMasuks() {
         let headersList = {
             Accept: "application/json",
@@ -42,7 +56,7 @@ export default class MasukService {
             Authorization: `Bearer ${useStore().token}`,
         };
         let reqOptions = {
-            url: parseApi("/barang"),
+            url: parseApi("/barang?all=1"),
             method: "GET",
             headers: headersList,
         };
@@ -73,6 +87,21 @@ export default class MasukService {
             url: parseApi("/masuk"),
             method: newMode ? "POST" : "PUT",
             data: Masuk,
+            headers: headersList,
+        };
+        return axios(reqOptions).then((res) => res.data);
+    }
+
+    updateBarang(barang) {
+        let headersList = {
+            Accept: "application/json",
+            // "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+            Authorization: `Bearer ${useStore().token}`,
+        };
+        let reqOptions = {
+            url: parseApi("/barang"),
+            method: "PUT",
+            data: barang,
             headers: headersList,
         };
         return axios(reqOptions).then((res) => res.data);

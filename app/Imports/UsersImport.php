@@ -19,7 +19,7 @@ class UsersImport implements ToModel, WithHeadingRow {
 			'email' => $row['email'],
 			'email_verified_at' => now(),
 			'role' => $row['role'],
-			'password' => bcrypt($row['password']), // password
+			'password' => bcrypt(trim($row['password'])), // password
 			'remember_token' => \Illuminate\Support\Str::random(10),
 		]);
 	}

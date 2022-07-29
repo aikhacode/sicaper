@@ -10,7 +10,7 @@
                                 label="New"
                                 icon="pi pi-plus"
                                 class="p-button-success mr-2"
-                                :disabled="store.login.data.role=='user'"
+                                :disabled="store.login.data.role == 'user'"
                                 @click="openNew"
                             />
                             <!-- <Button
@@ -228,13 +228,13 @@
                                 icon="pi pi-pencil"
                                 class="p-button-rounded p-button-success mr-2"
                                 @click="editProduct(slotProps.data)"
-                                :disabled="store.login.data.role=='user'"
+                                :disabled="store.login.data.role == 'user'"
                             />
                             <Button
                                 icon="pi pi-trash"
                                 class="p-button-rounded p-button-warning mt-2"
                                 @click="confirmDeleteProduct(slotProps.data)"
-                                :disabled="store.login.data.role=='user'"
+                                :disabled="store.login.data.role == 'user'"
                             />
                         </template>
                     </Column>
@@ -327,7 +327,21 @@
                             />
                         </div>
 
-                        <div class="field col-6 md:col-6">
+                        <div class="field col-6 md:col-4">
+                            <label for="subidbarang">Sub ID</label>
+                            <InputText
+                                id="subidbarang"
+                                v-model.trim="product.sub_id"
+                                disabled
+                                autofocus
+                                class="disable-input"
+                                :class="{
+                                    'p-invalid': submitted && !product.sub_id,
+                                }"
+                            />
+                        </div>
+
+                        <div class="field col-6 md:col-4">
                             <label for="idbarang">ID Barang</label>
                             <InputText
                                 id="idbarang"
@@ -342,7 +356,7 @@
                             />
                         </div>
 
-                        <div class="field col-6 md:col-6">
+                        <div class="field col-6 md:col-4">
                             <label for="barang">Jenis Barang</label>
                             <InputText
                                 id="barang"
@@ -381,6 +395,7 @@
                                         id="binary"
                                         v-model="checkedHargaBaru"
                                         :binary="true"
+                                        :disabled="modeEdit == 'edit'"
                                     >
                                     </Checkbox>
                                     <label for="binary" class="ml-3"
@@ -391,13 +406,11 @@
                             <InputText
                                 id="hargasatuan"
                                 v-model.trim="product.harga_satuan"
-                                :disabled="!checkedHargaBaru"
                                 autofocus
                                 mode="currency"
                                 currency="IDR"
                                 locale="id-ID"
                                 :class="{
-                                    'disable-input': !checkedHargaBaru,
                                     'p-invalid':
                                         submitted && !product.harga_satuan,
                                 }"
@@ -530,7 +543,7 @@
     </div>
 
     <PickBarang @selected="actionSelectedPickBarang" />
-     <DynamicDialog />
+    <DynamicDialog />
 </template>
 
 <script>
@@ -542,7 +555,7 @@ import axios from "axios";
 import PickBarang from "@/dialogs/PickBarang.vue";
 import { useStore } from "@/store.js";
 import { dayjs } from "@/dayjs.js";
-import DialogPrint from "@/dialogs/DialogPrint.vue"
+import DialogPrint from "@/dialogs/DialogPrint.vue";
 
 export default {
     // provide() {
@@ -574,7 +587,7 @@ export default {
             pickCategoryModel: null,
             pickMasukModel: null,
             modeEdit: "",
-            store:useStore(),
+            store: useStore(),
             barcodeDialog: false,
             filteredData: null,
             menuPickBarang: [
@@ -705,7 +718,7 @@ export default {
             if (this.validate()) {
                 if (this.modeEdit == "new") {
                     if (this.checkedHargaBaru) {
-                        console.log('hb',this.product)
+                        console.log("hb", this.product);
                         let barang = {
                             id_category: this.product.id_category,
                             category: this.product.category,
@@ -729,7 +742,34 @@ export default {
                             detail: "Barang harga baru added",
                             life: 3000,
                         });
-                        console.log('hb',res)
+                        console.log("hb", res);
+                    } else {
+                        let barangedit = {
+                            id: this.product.id_barang_stok,
+                            id_category: this.product.id_category,
+                            category: this.product.category,
+                            barcode: this.product.barcode,
+                            id_barang: this.product.id_barang,
+                            nama_barang: this.product.nama_barang,
+                            uraian: this.product.uraian,
+                            // stok: ,
+                            satuan: this.product.satuan,
+                            harga_satuan: this.product.harga_satuan,
+                        };
+
+                        console.log("barangedit", barangedit);
+
+                        this.productService
+                            .updateBarang(barangedit)
+                            .then((res) => {
+                                console.log("save barang edit", res);
+                                this.$toast.add({
+                                    severity: "success",
+                                    summary: "Successful",
+                                    detail: "Barang Updated",
+                                    life: 3000,
+                                });
+                            });
                     }
 
                     this.productService
@@ -762,6 +802,33 @@ export default {
                                 life: 3000,
                             });
 
+                            let barangedit = {
+                                id: this.product.id_barang_stok,
+                                id_category: this.product.id_category,
+                                category: this.product.category,
+                                barcode: this.product.barcode,
+                                id_barang: this.product.id_barang,
+                                nama_barang: this.product.nama_barang,
+                                uraian: this.product.uraian,
+                                // stok: ,
+                                satuan: this.product.satuan,
+                                harga_satuan: this.product.harga_satuan,
+                            };
+
+                            console.log("barangedit", barangedit);
+
+                            this.productService
+                                .updateBarang(barangedit)
+                                .then((res) => {
+                                    console.log("save barang edit", res);
+                                    this.$toast.add({
+                                        severity: "success",
+                                        summary: "Successful",
+                                        detail: "Barang Updated",
+                                        life: 3000,
+                                    });
+                                });
+
                             this.productService.getMasuks().then((data) => {
                                 this.products = data;
                                 // console.log(this.products)
@@ -780,12 +847,15 @@ export default {
                 console.log(this.product);
             }
         },
-        editProduct(product) {
+        async editProduct(product) {
             console.log("edit", product);
             // product.tgl_masuk = dayjs(product.tgl_masuk).format('DD-MM-YYYY')
             this.modeEdit = "edit";
             this.product = { ...product };
             this.product.user_id = this.productService.getUserId();
+            this.product.id_barang_stok = await this.productService.getBarangId(
+                btoa(product.sub_id)
+            );
             this.mode_edit = "- Edit";
             this.productDialog = true;
         },
@@ -875,7 +945,7 @@ export default {
             };
         },
 
-       print_stok_masuk() {
+        print_stok_masuk() {
             // console.log(this.products)
             // axios.post(this.productService.parseWeb('/print/stok'),{data:this.filteredData})
             // .then((res) => {console.log(res)})
@@ -883,24 +953,23 @@ export default {
             // window.open(this.productService.parseWeb("/print/stok/"), "_blank");
             const dialogRef = this.$dialog.open(DialogPrint, {
                 props: {
-                    header: 'Print Stok Masuk',
+                    header: "Print Stok Masuk",
                     style: {
-                        width: '80vw',
+                        width: "80vw",
                     },
-                    breakpoints:{
-                        '960px': '80vw',
-                        '640px': '90vw'
+                    breakpoints: {
+                        "960px": "80vw",
+                        "640px": "90vw",
                     },
-                    modal: true
+                    modal: true,
                 },
-                data:{
-                    type:'print-stok-masuk',
+                data: {
+                    type: "print-stok-masuk",
                 },
                 templates: {
                     // footer: () => {
                     //     return [
                     //         h('div',{class:'p-3'}),
-                         
                     //         h(Button, { label: "Close", icon: "pi pi-check", onClick: () => dialogRef.close({ buttonType: 'Yes' }), autofocus: true })
                     //     ]
                     // }
@@ -911,7 +980,7 @@ export default {
                         // this.refreshCategory()
                         // this.$toast.add({ severity:'info', 'ok', life: 3000 });
                     }
-                }
+                },
             });
         },
         onFiltered(e) {
@@ -942,6 +1011,7 @@ export default {
             this.barcodeDialog = false;
             this.product.barcode = e;
             this.productService.getBarangByBarcode(e).then((selectedBarang) => {
+                this.product.id_barang_stok = selectedBarang.id;
                 this.product.id_category = selectedBarang.id_category;
                 this.product.category = selectedBarang.category;
                 this.product.id_barang = selectedBarang.id_barang;
@@ -954,6 +1024,7 @@ export default {
         },
         actionSelectedPickBarang(selectedBarang) {
             console.log(selectedBarang);
+            this.product.id_barang_stok = selectedBarang.id;
             this.product.id_category = selectedBarang.id_category;
             this.product.category = selectedBarang.category;
             this.product.id_barang = selectedBarang.id_barang;

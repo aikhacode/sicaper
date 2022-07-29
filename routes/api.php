@@ -88,7 +88,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	});
 
 	Route::get('/dashboard', function () {
-		$barang = \Illuminate\Support\Facades\DB::select("SELECT COUNT(id) AS count FROM (SELECT id from barangs ) AS b")[0];
+		// $barang = \Illuminate\Support\Facades\DB::select("SELECT COUNT(id) AS count FROM (SELECT id from barangs ) AS b")[0];
+
+		$barang = array('count' => count(\App\Models\Barang::selectRaw("barangs.*,(SELECT IFNULL(SUM(jumlah),0) FROM masuks WHERE masuks.sub_id=barangs.sub_id) as stok_masuk,(SELECT IFNULL(SUM(jumlah),0) FROM keluars WHERE keluars.sub_id=barangs.sub_id) as stok_keluar ")
+				->havingRaw('(barangs.stok+stok_masuk-stok_keluar)>0')
+				->get()));
+
 		$masuk = \Illuminate\Support\Facades\DB::select("SELECT COUNT(id) AS count FROM (SELECT id from masuks ) AS b")[0];
 		$keluar = \Illuminate\Support\Facades\DB::select("SELECT COUNT(id) AS count FROM (SELECT id from keluars ) AS b")[0];
 
@@ -153,6 +158,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 	Route::get('/barang/barcode/{barcode}', [BarangController::class, 'get_by_barcode']);
 	Route::get('/barang/category', [BarangController::class, 'get_all_category']);
 	Route::get('/barang/list/category/{id}', [BarangController::class, 'get_barang_by_category']);
+	Route::get('/barang/stok/barcode/{barcode}', [BarangController::class, 'get_stok_akhir']);
+	Route::get('/barang/search/subid/{subid}', [BarangController::class, 'get_id_by_sub_id']);
 	Route::post('/barang', [BarangController::class, 'create']);
 	Route::put('/barang', [BarangController::class, 'store']);
 	Route::delete('/barang/{id}', [BarangController::class, 'destroy']);
