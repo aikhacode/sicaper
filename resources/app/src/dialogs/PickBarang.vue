@@ -41,13 +41,36 @@
                 </template>
                 <template #empty>
                     Barang tidak ditemukan. Tunggu sebentar...
+                    <i
+                        class="pi pi-spin pi-spinner"
+                        style="font-size: 2rem; margin-left: 2rem"
+                    ></i>
                 </template>
 
                 <Column field="barcode" header="Barcode"></Column>
                 <Column field="sub_id" header="Sub ID"></Column>
                 <Column field="category" header="Kategori"></Column>
                 <Column field="nama_barang" header="Jenis Barang"></Column>
-                <Column field="harga_satuan" header="Harga Satuan"></Column>
+                <Column header="Stok Akhir">
+                    <template #body="slotProps">
+                        <span
+                            class="flex justify-content-center"
+                            style="width: 100%"
+                        >
+                            {{
+                                slotProps.data.stok +
+                                slotProps.data.stok_masuk -
+                                slotProps.data.stok_keluar
+                            }}
+                        </span>
+                    </template>
+                </Column>
+                <Column field="harga_satuan" header="Harga Satuan">
+                    <template #body="slotProps">
+                        <span class="p-column-title">Harga Satuan</span>
+                        {{ formatCurrency(slotProps.data.harga_satuan) }}
+                    </template>
+                </Column>
                 <Column field="uraian" header="Uraian"></Column>
             </DataTable>
         </div>
@@ -83,11 +106,31 @@ const onRowSelect = (e) => {
 
 emitter.on("pick-barang-dialog", (e) => {
     flagVisible.value = e.visible;
+    pickBarang.value = [];
 
-    productService.getPickBarang().then((data) => {
-        pickBarang.value = data;
-    });
+    if (e.stokKeluar) {
+        productService.getPickBarangStokAda().then((data) => {
+            pickBarang.value = data;
+        });
+    } else {
+        productService.getPickBarang().then((data) => {
+            pickBarang.value = data;
+        });
+    }
 });
+
+const formatCurrency = (value) => {
+    if (value) {
+        var formatter = new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+        });
+
+        return formatter.format(value); /* $2,500.00 */
+    }
+
+    return;
+};
 
 onMounted(() => {
     loading.value = true;

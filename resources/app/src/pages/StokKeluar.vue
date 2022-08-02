@@ -612,8 +612,8 @@ export default {
         //    });
     },
     methods: {
-        onPickBarang() {
-            this.$emitter.emit("pick-barang-dialog", { visible: true });
+        onPickBarang(keluar=true) {
+            this.$emitter.emit("pick-barang-dialog", { visible: true, stokKeluar: keluar });
             // this.pickBarangDialog = true
         },
         formatCurrency(value) {

@@ -63,6 +63,20 @@ export default class MasukService {
         return axios(reqOptions).then((res) => res.data);
     }
 
+    getPickBarangStokAda() {
+        let headersList = {
+            Accept: "application/json",
+            // "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+            Authorization: `Bearer ${useStore().token}`,
+        };
+        let reqOptions = {
+            url: parseApi("/barang"),
+            method: "GET",
+            headers: headersList,
+        };
+        return axios(reqOptions).then((res) => res.data);
+    }
+
     getBarangByBarcode(barcode) {
         let headersList = {
             Accept: "application/json",
