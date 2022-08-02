@@ -51,7 +51,7 @@
                 <Column field="sub_id" header="Sub ID"></Column>
                 <Column field="category" header="Kategori"></Column>
                 <Column field="nama_barang" header="Jenis Barang"></Column>
-                <Column header="Stok Akhir">
+                <Column v-if="keluar" header="Stok Akhir">
                     <template #body="slotProps">
                         <span
                             class="flex justify-content-center"
@@ -88,6 +88,7 @@ const productService = new MasukService();
 const flagVisible = ref(false);
 const pickBarang = ref();
 const loading = ref(false);
+const keluar = ref('false')
 
 // const selectedPickbarang = ref()
 const filtersPickBarang = reactive({
@@ -109,10 +110,12 @@ emitter.on("pick-barang-dialog", (e) => {
     pickBarang.value = [];
 
     if (e.stokKeluar) {
+        keluar.value = true
         productService.getPickBarangStokAda().then((data) => {
             pickBarang.value = data;
         });
     } else {
+        keluar.value = false
         productService.getPickBarang().then((data) => {
             pickBarang.value = data;
         });
