@@ -1,17 +1,20 @@
 <template>
     <Dialog
         v-model:visible="flagVisible"
-        :style="{ width: '1024px' }"
+        :style="{ width: '95%' }"
         header="Pilih Barang"
         :modal="true"
         class="p-fluid"
     >
+    
         <div class="card">
             <DataTable
+                showGridlines 
+                class="p-datatable-sm"
                 :value="pickBarang"
                 selectionMode="single"
                 dataKey="id"
-                responsiveLayout="scroll"
+                responsiveLayout="stack"
                 scrollable
                 scrollHeight="400px"
                 :virtualScrollerOptions="{ itemSize: 46 }"
@@ -47,10 +50,26 @@
                     ></i>
                 </template>
 
-                <Column field="barcode" header="Barcode"></Column>
-                <Column field="sub_id" header="Sub ID"></Column>
-                <Column field="category" header="Kategori"></Column>
-                <Column field="nama_barang" header="Jenis Barang"></Column>
+                <Column
+                    v-if="isDesktop()"
+                    field="barcode"
+                    header="Barcode"
+                ></Column>
+                <Column
+                    v-if="isDesktop()"
+                    field="sub_id"
+                    header="Sub ID"
+                ></Column>
+                <Column
+                    v-if="isDesktop()"
+                    field="category"
+                    header="Kategori"
+                ></Column>
+                <Column
+                    v-if="isDesktop()"
+                    field="nama_barang"
+                    header="Jenis Barang"
+                ></Column>
                 <Column v-if="keluar" header="Stok Akhir">
                     <template #body="slotProps">
                         <span
@@ -65,13 +84,13 @@
                         </span>
                     </template>
                 </Column>
-                <Column field="harga_satuan" header="Harga Satuan">
+                <Column  field="harga_satuan" header="Harga Satuan">
                     <template #body="slotProps">
                         <span class="p-column-title">Harga Satuan</span>
                         {{ formatCurrency(slotProps.data.harga_satuan) }}
                     </template>
                 </Column>
-                <Column field="uraian" header="Uraian"></Column>
+                <Column  field="uraian" header="Uraian"></Column>
             </DataTable>
         </div>
     </Dialog>
@@ -81,6 +100,7 @@ import { ref, reactive, inject, onMounted } from "vue";
 import emitter from "@/emit.js";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
 import MasukService from "@/service/MasukService.js";
+import { isDesktop } from "@/func.js";
 
 // const selected = inject('selectedpickbarang')
 const emit = defineEmits(["selected"]);
@@ -88,7 +108,7 @@ const productService = new MasukService();
 const flagVisible = ref(false);
 const pickBarang = ref();
 const loading = ref(false);
-const keluar = ref('false')
+const keluar = ref("false");
 
 // const selectedPickbarang = ref()
 const filtersPickBarang = reactive({
@@ -110,12 +130,12 @@ emitter.on("pick-barang-dialog", (e) => {
     pickBarang.value = [];
 
     if (e.stokKeluar) {
-        keluar.value = true
+        keluar.value = true;
         productService.getPickBarangStokAda().then((data) => {
             pickBarang.value = data;
         });
     } else {
-        keluar.value = false
+        keluar.value = false;
         productService.getPickBarang().then((data) => {
             pickBarang.value = data;
         });
