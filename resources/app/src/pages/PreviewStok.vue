@@ -94,9 +94,9 @@
                     <Column header="Sisa">
                         <template #body="slotProps">
                             {{
-                                slotProps.data.stok +
-                                slotProps.data.stok_masuk -
-                                slotProps.data.stok_keluar
+                                slotProps.data.stok*1 +
+                                slotProps.data.stok_masuk*1 -
+                                slotProps.data.stok_keluar*1
                             }}
                         </template>
                         <template #footer>{{ sum.sisa }}</template>
@@ -105,9 +105,9 @@
                         <template #body="slotProps">
                             <div class="text-right w-full">
                                 {{
-                                    formatCurrency((slotProps.data.stok +
-                                        slotProps.data.stok_masuk -
-                                        slotProps.data.stok_keluar) *
+                                    formatCurrency((slotProps.data.stok*1 +
+                                        slotProps.data.stok_masuk*1 -
+                                        slotProps.data.stok_keluar*1) *
                                     slotProps.data.harga_satuan)
                                 }}
                             </div>
@@ -183,13 +183,13 @@ onMounted(async () => {
         sum.masuk += item.stok_masuk * 1 ;
         sum.keluar += item.stok_keluar * 1 ;
         sum.rupiah +=
-            (item.stok + item.stok_masuk - item.stok_keluar) *
+            (item.stok*1 + item.stok_masuk*1 - item.stok_keluar*1) *
             item.harga_satuan;
 
         return item;
     });
 
-    sum.sisa = sum.awal + sum.masuk - sum.keluar;
+    sum.sisa = sum.awal*1 + sum.masuk*1 - sum.keluar*1;
 
     console.log("hasil", products.value);
 

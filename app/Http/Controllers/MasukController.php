@@ -11,7 +11,7 @@ class MasukController extends Controller {
 		$masuk = Masuk::join('barangs', 'barangs.sub_id', '=', 'masuks.sub_id')->join('users', 'users.id', '=', 'masuks.user_id')->get([
 			'masuks.id as id', 'masuks.user_id', 'masuks.tgl_masuk', 'barangs.category', 'barangs.nama_barang', 'barangs.sub_id', 'barangs.barcode', 'barangs.uraian',
 			'barangs.id_category', 'barangs.id_barang', 'masuks.jumlah', 'barangs.satuan', 'barangs.harga_satuan', 'masuks.keterangan',
-			'users.email',
+			'users.email', 'users.name',
 		]);
 		// $masuk = Masuk::all();
 		return response($masuk);

@@ -73,7 +73,7 @@
                     ></Column> -->
 
                     <Column
-                        field="email"
+                        field="name"
                         header="User ID"
                         :sortable="true"
                         headerStyle="width:14%; min-width:10rem;"
@@ -81,7 +81,7 @@
                         <template #body="slotProps">
                             <img width="32" src="/images/avatar/nurse.png" />
                             <span class="p-column-title">User ID</span>
-                            {{ slotProps.data.email }}
+                            {{ slotProps.data.name }}
                         </template>
                     </Column>
                     <Column
@@ -141,6 +141,7 @@
                     <Column
                         field="sub_id"
                         header="SUB ID"
+                        v-if="!$hideIdColumn" 
                         :sortable="true"
                         headerStyle="width:14%; min-width:8rem;"
                     >

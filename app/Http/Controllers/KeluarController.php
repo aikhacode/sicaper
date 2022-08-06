@@ -11,7 +11,7 @@ class KeluarController extends Controller {
 		$keluar = Keluar::join('barangs', 'barangs.sub_id', '=', 'keluars.sub_id')->join('users', 'users.id', '=', 'keluars.user_id')->get([
 			'keluars.id as id', 'keluars.user_id', 'keluars.tgl_keluar', 'barangs.category', 'barangs.nama_barang', 'barangs.sub_id', 'barangs.barcode', 'barangs.uraian',
 			'barangs.id_category', 'barangs.id_barang', 'keluars.jumlah', 'barangs.satuan', 'barangs.harga_satuan', 'keluars.keterangan',
-			'users.email',
+			'users.email', 'users.name',
 		]);
 		// $Keluar = Keluar::all();
 		return response($keluar);

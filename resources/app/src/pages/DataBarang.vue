@@ -92,6 +92,7 @@
                         headerStyle="width: 3rem"
                     ></Column>
                     <Column
+                        v-if="!$hideIdColumn"
                         field="id_category"
                         header="ID Cat"
                         :sortable="true"
@@ -103,6 +104,7 @@
                         </template>
                     </Column>
                     <Column
+
                         field="category"
                         header="Category"
                         :sortable="true"
@@ -128,6 +130,7 @@
 						</template>
 					</Column> -->
                     <Column
+                        v-if="!$hideIdColumn" 
                         field="id_barang"
                         header="ID Barang"
                         :sortable="true"
@@ -139,6 +142,7 @@
                         </template>
                     </Column>
                     <Column
+                        v-if="!$hideIdColumn" 
                         field="sub_id"
                         header="SUB ID"
                         :sortable="true"
@@ -640,6 +644,7 @@ export default {
             filteredData: null,
             store: useStore(),
             searchBarcode: false,
+            
 
             test1: "",
         };

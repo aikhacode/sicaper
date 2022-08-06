@@ -13,6 +13,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+  build:{
+    outDir: '../../public/app',
+  },
   //  build: {
   //   lib: {
   //     entry: path.resolve(__dirname, './src/main.js'),

@@ -3,9 +3,8 @@
 	"private": true,
 	"version": "0.0.1",
 	"scripts": {
-		"start": "npm run prettier & npm run dev",
 		"dev": "vite --host sicaper.test",
-		"build": "rm -rf dist/ && rm -rf ../../public/app/ && vite build && cp -r dist/ ../../public/app/",
+		"build": "vite build --emptyOutDir",
 		"preview": "vite preview --port 4173",
 		"lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
 		"prettier": "onchange \"src/**/*\" -- prettier --write --ignore-unknown {{changed}}"

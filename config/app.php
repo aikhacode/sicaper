@@ -178,7 +178,7 @@ return [
 		App\Providers\EventServiceProvider::class,
 		App\Providers\RouteServiceProvider::class,
 
-		// Barryvdh\Snappy\ServiceProvider::class,
+		// Barryvdh\DomPDF\ServiceProvider::class,
 		Barryvdh\Snappy\ServiceProvider::class,
 
 	],
@@ -240,6 +240,7 @@ return [
 
 		'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
 		'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+		// 'PDF' => 'Barryvdh\DomPDF\Facade\Pdf::class',
 
 	],
 

@@ -111,6 +111,8 @@ app.config.globalProperties.$appState = reactive({
 });
 
 app.config.globalProperties.$emitter = emitter
+app.config.globalProperties.$hideIdColumn = true,
+
 app.use(createPinia())
 app.use(PrimeVue, { ripple: true, inputStyle: "outlined" });
 app.use(ConfirmationService);

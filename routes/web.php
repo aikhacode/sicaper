@@ -31,6 +31,7 @@ Route::get('/print/stok', function () {
 
 	$pdf = PDF::loadview('stok', ['data' => $barang, 'header' => $header]);
 	return $pdf->inline();
+	// return $pdf->stream();
 
 	// return response($obj);
 
@@ -91,7 +92,9 @@ Route::get('/print/masuk', function (Request $request) {
 	$from = date($periode['start']);
 	$to = date($periode['end']);
 
-	$masuk = Masuk::join('barangs', 'barangs.sub_id', '=', 'masuks.sub_id')->whereBetween('tgl_masuk', [$from, $to])->get(['tgl_masuk', 'barcode', 'uraian', 'jumlah', 'harga_satuan', 'keterangan']);
+	$masuk = Masuk::join('barangs', 'barangs.sub_id', '=', 'masuks.sub_id')->whereBetween('tgl_masuk', [$from, $to])
+		->orderBy('tgl_masuk')
+		->get(['tgl_masuk', 'barcode', 'uraian', 'jumlah', 'harga_satuan', 'keterangan']);
 
 	$no = 1;
 	$jumlah_ = 0;
@@ -126,6 +129,7 @@ Route::get('/print/masuk', function (Request $request) {
 
 	$pdf = PDF::loadview('masuk', ['data' => $masuk, 'header' => $header, 'periode' => $judul, 'summary' => $summary]);
 	return $pdf->inline();
+	// return $pdf->stream();
 
 	// return response($obj);
 
@@ -178,7 +182,7 @@ Route::get('/print/keluar', function (Request $request) {
 	$from = date($periode['start']);
 	$to = date($periode['end']);
 
-	$keluar = Keluar::join('barangs', 'barangs.sub_id', '=', 'keluars.sub_id')->whereBetween('tgl_keluar', [$from, $to])->get(['tgl_keluar', 'barcode', 'uraian', 'jumlah', 'harga_satuan', 'keterangan']);
+	$keluar = Keluar::join('barangs', 'barangs.sub_id', '=', 'keluars.sub_id')->orderBy('tgl_keluar')->whereBetween('tgl_keluar', [$from, $to])->get(['tgl_keluar', 'barcode', 'uraian', 'jumlah', 'harga_satuan', 'keterangan']);
 
 	$no = 1;
 	$jumlah_ = 0;
@@ -213,6 +217,7 @@ Route::get('/print/keluar', function (Request $request) {
 
 	$pdf = PDF::loadview('keluar', ['data' => $keluar, 'header' => $header, 'periode' => $judul, 'summary' => $summary]);
 	return $pdf->inline();
+	// return $pdf->stream();
 
 	// return $keluar;
 });
@@ -487,6 +492,7 @@ Route::get('/print/kartustok', function (Request $request) {
 
 	]);
 	return $pdf->inline();
+	// return $pdf->stream();
 
 	// return $keluar;
 });
@@ -725,7 +731,8 @@ Route::get('/preview/rincianstok', function (Request $request) {
 	// 		'nama_barang' => $nama_barang,
 
 	// 	]);
-	// return $pdf->inline();
+	// // return $pdf->inline();
+	//return $pdf->stream();
 
 });
 
@@ -967,5 +974,6 @@ GROUP BY barcode");
 
 		]);
 	return $pdf->inline();
+	// return $pdf->stream();
 
 });
