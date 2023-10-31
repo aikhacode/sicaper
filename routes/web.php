@@ -30,8 +30,8 @@ Route::get('/print/stok', function () {
 	$header = Schema::getColumnListing(Barang::first()->getTable());
 
 	$pdf = PDF::loadview('stok', ['data' => $barang, 'header' => $header]);
-	return $pdf->inline();
-	// return $pdf->stream();
+	//return $pdf->inline();
+	return $pdf->stream();
 
 	// return response($obj);
 
@@ -128,8 +128,8 @@ Route::get('/print/masuk', function (Request $request) {
 	$summary = ['jumlah' => $jumlah_, 'harga_satuan' => number_format($harga_satuan_, 2), 'total' => number_format($total_, 2)];
 
 	$pdf = PDF::loadview('masuk', ['data' => $masuk, 'header' => $header, 'periode' => $judul, 'summary' => $summary]);
-	return $pdf->inline();
-	// return $pdf->stream();
+	//return $pdf->inline();
+	return $pdf->stream();
 
 	// return response($obj);
 
@@ -216,8 +216,8 @@ Route::get('/print/keluar', function (Request $request) {
 	$summary = ['jumlah' => $jumlah_, 'harga_satuan' => number_format($harga_satuan_, 2), 'total' => number_format($total_, 2)];
 
 	$pdf = PDF::loadview('keluar', ['data' => $keluar, 'header' => $header, 'periode' => $judul, 'summary' => $summary]);
-	return $pdf->inline();
-	// return $pdf->stream();
+	//return $pdf->inline();
+	return $pdf->stream();
 
 	// return $keluar;
 });
@@ -491,8 +491,8 @@ Route::get('/print/kartustok', function (Request $request) {
 		'nama_barang' => $nama_barang,
 
 	]);
-	return $pdf->inline();
-	// return $pdf->stream();
+	//return $pdf->inline();
+	return $pdf->stream();
 
 	// return $keluar;
 });
@@ -731,8 +731,8 @@ Route::get('/preview/rincianstok', function (Request $request) {
 	// 		'nama_barang' => $nama_barang,
 
 	// 	]);
-	// // return $pdf->inline();
-	//return $pdf->stream();
+	// // //return $pdf->inline();
+	return $pdf->stream();
 
 });
 
@@ -973,7 +973,7 @@ GROUP BY barcode");
 			'periode' => $judul,
 
 		]);
-	return $pdf->inline();
-	// return $pdf->stream();
+	//return $pdf->inline();
+	return $pdf->stream();
 
 });
